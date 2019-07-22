@@ -1,0 +1,20 @@
+{
+  "name": "daw",
+  "version": "1.0.0",
+  "description": "browser-based digital audio workstation",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "http-dev": "nodemon server/index.js"
+  },
+  "keywords": [
+    "music",
+    "production",
+    "composition"
+  ],
+  "author": "Sam Hodak",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
