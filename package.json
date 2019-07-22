@@ -15,6 +15,7 @@
   "author": "Sam Hodak",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "jest": "^24.8.0"
   }
 }
