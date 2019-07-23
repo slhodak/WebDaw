@@ -4,12 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="style.css" type="text/css" rel="stylesheet">
   <title>WebDAW</title>
 </head>
-<body>
-  <div class="dawTitle"></div>
-  <div class="dawSynthesizers"></div>
-  <div class="dawPianoRoll"></div>
+<body class="lightBody">
+  <div class="lightTitle module"><h2>webDAW</h2></div>
+  <div class="dawSynthesizers module light">
+    <h2>Synthesizers</h2>
+    <hr>
+    <div class="synthList"></div>
+  </div>
+  <div class="dawPianoRoll module light">
+    <h2>Piano Roll</h2>
+    <hr>
+    <div class="pianoRoll"></div>
+  </div>
   <div class="scripts"></div>
   <script src="bundle.js"></script>
 </body>
