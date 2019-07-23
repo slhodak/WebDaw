@@ -1,4 +1,4 @@
-import Views from './views/views.js';
+import { SynthViews } from './views/views.js';
 
 //  Browser-Based DAW
 //  Brings synths and sequencer together (and other tools)
@@ -18,7 +18,7 @@ const DAW = function() {
 
 DAW.prototype.addSynthesizer = function(synth) {
   this.synthesizers.push(synth);
-  Views.addSynthesizer(synth);
+  SynthViews.add(synth);
 };
 
 export default Manager;

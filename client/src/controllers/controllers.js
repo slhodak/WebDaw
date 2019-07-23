@@ -1,6 +1,39 @@
 import { Network } from '../../config/config.js';
 import Manager from '../daw.js';
 
+//  General Controls
+
+const Controls = {
+  83: () => {
+    Manager.daw.addSynthesizer();
+  },
+  // 70: () => {
+  //   Manager.synthesizer.addFilter();
+  // },
+  // 32: () => {
+  //   if (Manager.synthesizer.globals.demoTone === false) {
+  //     Manager.synthesizer.playNote({ data: [127, 44, 65] });
+  //   } else {
+  //     Manager.synthesizer.endNote({ data: [127, 44, 65] })
+  //   }
+  //   Manager.synthesizer.globals.demoTone = !Manager.synthesizer.globals.demoTone;
+  // }
+};
+
+window.addEventListener('keydown', (e) => {
+  console.log(e.keyCode);
+  if (e.target.type !== 'text') {
+    if (!Manager.daw) {
+      Manager.createDAWIfNoneExists();
+      if (Controls[e.keyCode] && e.keyCode !== 32) {
+        Controls[e.keyCode]();
+      }
+    } else if (Controls[e.keyCode]) {
+      Controls[e.keyCode]();
+    }
+  }
+});
+
 //  Save, Load, and DarkMode Buttons
 const FormController = {
   initializeSavePresetModule() {

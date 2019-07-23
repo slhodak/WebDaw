@@ -1,5 +1,5 @@
 const Templates = {
-  synthesizer(synth) {
+  synthesizer(synth = {}) {
     //  use synth model (containing http link) to create device button
     return `<div class="synthesizer row">
     <a href="${synth.link}">Open</a>

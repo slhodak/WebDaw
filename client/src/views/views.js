@@ -1,9 +1,11 @@
 import Templates from './templates.js';
 
 const SynthViews = {
-  createSynth(synth) {
+  add(synth) {
     let synthList = document.getElementsByClassName('synthList')[0];
-    synthList.appendChild(Templates.createSynth(synth));
+    let synthElem = document.createElement('div');
+    synthElem.innerHTML = Templates.synthesizer(synth);
+    synthList.appendChild(synthElem);
   }
 };
 
