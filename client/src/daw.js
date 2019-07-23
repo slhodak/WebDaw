@@ -14,12 +14,14 @@ const DawManager = {
 };
 
 const DAW = function() {
-  this.synthesizers = [];
+  this.synthesizers = {};
   this.pianoRoll = null;
 };
 
 DAW.prototype.addSynthesizer = function(synth) {
-  this.synthesizers.push(synth);
+  //  synths must arrive with a unique name property
+  //  either from saved preset or unique number
+  this.synthesizers[synth.name] = synth;
   SynthViews.add(synth);
 };
 

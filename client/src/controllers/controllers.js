@@ -143,13 +143,13 @@ FormController.initializeDarkModeButton();
 const SynthListController = {
   addVolumeListener(slider) {
     slider.addEventListener('change', (event) => {
-      DawManager.daw.synth[event.currentTarget.dataset.id].setGain(event.target.value);
+      DawManager.daw.synth[event.currentTarget.dataset.name].setGain(event.target.value);
     });
     return slider;
   },
   addMuteListener(button) {
     button.addEventListener('mousedown', (event) => {
-      DawManager.daw.synth[event.currentTarget.dataset.id].toggleMute();
+      DawManager.daw.synth[event.currentTarget.dataset.name].toggleMute();
     });
     return button;
   }
