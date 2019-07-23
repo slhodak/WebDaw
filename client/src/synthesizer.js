@@ -7,11 +7,8 @@ import Helpers from './lib/helpers.js';
 */
 
 let SynthManager = {
-  createSynthesizerIfNoneExists() {
-    if (!Manager.synthesizer) {
-      Manager.synthesizer = new Synthesizer();
-      document.getElementsByClassName('globalControls')[0].removeEventListener('mousedown', Manager.createSynthesizerIfNoneExists);
-    }
+  createSynthesizer() {
+    SynthManager.synthesizer = new Synthesizer();
   },
   synthesizer: null,
   sequencerSocket: null,
@@ -22,7 +19,6 @@ let SynthManager = {
 //  - Synthesizer
 class Synthesizer {
   constructor(options = {}) {
-    this.context = new AudioContext();
     this.router = new Router(this);
     this.masterGain = this.context.createGain();
     this.masterGain.connect(this.context.destination);

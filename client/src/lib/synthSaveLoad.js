@@ -1,5 +1,4 @@
 import { SynthManager } from '../synthesizer.js';
-import Helpers from '../lib/helpers.js';
 
 const SynthSaveLoad = {
   save(synthesizer, name, overwrite) {
@@ -44,8 +43,7 @@ const SynthSaveLoad = {
     return synthData;
   },
   load(synthData) {
-    SynthManager.synthesizer = null;
-    SynthManager.createSynthesizerIfNoneExists({
+    SynthManager.createSynthesizer({
       porta: synthData.synthesizer.settings.globals.porta,
       attack: synthData.synthesizer.settings.globals.attack,
       release: synthData.synthesizer.settings.globals.release,
@@ -85,6 +83,8 @@ const SynthSaveLoad = {
         destination
       );
     }
+
+    return SynthManager.synthesizer;
   }
 };
 
