@@ -42,8 +42,8 @@ const SynthSaveLoad = {
     });
     return synthData;
   },
-  load(synthData) {
-    SynthManager.createSynthesizer({
+  load(daw, synthData) {
+    SynthManager.createSynthesizer(daw, {
       porta: synthData.synthesizer.settings.globals.porta,
       attack: synthData.synthesizer.settings.globals.attack,
       release: synthData.synthesizer.settings.globals.release,
@@ -83,8 +83,6 @@ const SynthSaveLoad = {
         destination
       );
     }
-
-    return SynthManager.synthesizer;
   }
 };
 

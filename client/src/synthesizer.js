@@ -7,8 +7,8 @@ import Helpers from './lib/helpers.js';
 */
 
 let SynthManager = {
-  createSynthesizer() {
-    SynthManager.synthesizer = new Synthesizer();
+  createSynthesizer(daw, options) {
+    SynthManager.synthesizer = new Synthesizer(daw, options);
   },
   synthesizer: null,
   sequencerSocket: null,
@@ -18,10 +18,10 @@ let SynthManager = {
 
 //  - Synthesizer
 class Synthesizer {
-  constructor(options = {}) {
+  constructor(daw, options = {}) {
+    this.daw = daw;
     this.router = new Router(this);
-    this.masterGain = this.context.createGain();
-    this.masterGain.connect(this.context.destination);
+    this.output = daw.context.createGain();
     this.globals = {
       demoTone: false,
       porta: options.porta || 0.05,
@@ -60,7 +60,7 @@ class Synthesizer {
       if (!this.mono.note) {
         this.oscillators.forEach(osc => {
           this.mono.voices[midiMessage.data[1]] = new Voice(
-            synthesizer.context, 
+            this.daw.context, 
             {
               frequency: synthesizer.findFrequencyFromNote(midiMessage.data[1]),
               type: osc.type,
@@ -137,7 +137,7 @@ class Synthesizer {
   }
 
   setGain(value) {
-    this.masterGain.gain.setTargetAtTime(value, this.context.currentTime, 0);
+    this.output.gain.setTargetAtTime(value, this.daw.context.currentTime, 0);
   }
 
   setAttack(value) {
@@ -196,24 +196,24 @@ class Voice extends OscillatorNode {
     this.next = null;
 
     this.parent = parent;
-    this.gainNode = this.parent.synthesizer.context.createGain();
+    this.gainNode = this.parent.synthesizer.daw.context.createGain();
     this.gainNode.gain.value = 0;
     this.connect(this.gainNode);
     this.gainNode.connect(parent.output);
     this.start();
-    this.gainNode.gain.setTargetAtTime(parent.volume, this.parent.synthesizer.context.currentTime, parent.attack);
+    this.gainNode.gain.setTargetAtTime(parent.volume, this.parent.synthesizer.daw.context.currentTime, parent.attack);
 
     this.setFrequency = this.setFrequency.bind(this);
     this.off = this.off.bind(this);
   }
 
   setFrequency(note) {
-    this.frequency.setTargetAtTime(this.parent.synthesizer.findFrequencyFromNote(note), this.parent.synthesizer.context.currentTime, this.parent.porta);
+    this.frequency.setTargetAtTime(this.parent.synthesizer.findFrequencyFromNote(note), this.parent.synthesizer.daw.context.currentTime, this.parent.porta);
   }
 
   off() {
-    this.gainNode.gain.setTargetAtTime(0, this.parent.synthesizer.context.currentTime, this.parent.release / 10);
-    this.stop(this.parent.synthesizer.context.currentTime + this.parent.release);
+    this.gainNode.gain.setTargetAtTime(0, this.parent.synthesizer.daw.context.currentTime, this.parent.release / 10);
+    this.stop(this.parent.synthesizer.daw.context.currentTime + this.parent.release);
   }
 }
 
@@ -234,10 +234,10 @@ class Oscillator {
     this.attack = this.synthesizer.globals.attack;
     this.release = this.synthesizer.globals.release;
 
-    this.output = this.synthesizer.context.createGain();
+    this.output = this.synthesizer.daw.context.createGain();
     this.output.gain.value = this.volume;
-    this.output.connect(synthesizer.masterGain);
-    this.dest = synthesizer.masterGain;
+    this.output.connect(synthesizer.output);
+    this.dest = synthesizer.output;
 
     this.setDestination = this.setDestination.bind(this);
 
@@ -249,8 +249,8 @@ class Oscillator {
   }
 
   addVoice(midiMessage) {
-    let voice = new Voice(this.synthesizer.context, {
-      frequency: this.synthesizer.findFrequencyFromNote(midiMessage.data[1] + this.semitoneOffset, this.synthesizer.context.currentTime, 0),
+    let voice = new Voice(this.synthesizer.daw.context, {
+      frequency: this.synthesizer.findFrequencyFromNote(midiMessage.data[1] + this.semitoneOffset, this.synthesizer.daw.context.currentTime, 0),
       type: this.type,
       detune: this.fineDetune
     }, this);
@@ -272,8 +272,8 @@ class Oscillator {
     if (head === null || head === undefined) {
       delete this.voices[midiMessage.data[1]];
     }
-    voice.gainNode.gain.setTargetAtTime(0, this.synthesizer.context.currentTime, this.release / 10);
-    voice.stop(this.synthesizer.context.currentTime + this.release);
+    voice.gainNode.gain.setTargetAtTime(0, this.synthesizer.daw.context.currentTime, this.release / 10);
+    voice.stop(this.synthesizer.daw.context.currentTime + this.release);
   }
 
   setDestination(destination) {
@@ -304,7 +304,7 @@ class Oscillator {
     this.semitoneOffset = Number(semitoneOffset);
     for (let voice in this.voices) {
       Helpers.LL.changeAllNodes(this.voices[voice], (node) => {
-        node.frequency.setTargetAtTime(this.synthesizer.findFrequencyFromNote(Number(voice) + this.semitoneOffset), this.synthesizer.context.currentTime, 0);
+        node.frequency.setTargetAtTime(this.synthesizer.findFrequencyFromNote(Number(voice) + this.semitoneOffset), this.synthesizer.daw.context.currentTime, 0);
       });
     }
   }
@@ -313,7 +313,7 @@ class Oscillator {
     this.fineDetune = detune;
     for (let voice in this.voices) {
       Helpers.LL.changeAllNodes(this.voices[voice], (node) => {
-        node.detune.setTargetAtTime(detune, this.synthesizer.context.currentTime, 0);
+        node.detune.setTargetAtTime(detune, this.synthesizer.daw.context.currentTime, 0);
       });
     }
   }
@@ -334,17 +334,17 @@ class Oscillator {
 //  - Filters
 class Filter extends BiquadFilterNode {
   constructor(synthesizer, options = {}) {
-    super(synthesizer.context);
+    super(synthesizer.daw.context);
 
     this.synthesizer = synthesizer;
     this.id = 2000 + this.synthesizer.filters.length;
 
     this.type = options.type || 'lowpass';
-    this.frequency.setTargetAtTime(options.frequency || 20000, this.context.currentTime, 0);
-    this.gain.setTargetAtTime(options.gain || 0, this.context.currentTime, 0);
-    this.Q.setTargetAtTime(options.Q || 0, this.context.currentTime, 0);
-    this.connect(this.synthesizer.masterGain);
-    this.dest = this.synthesizer.masterGain;
+    this.frequency.setTargetAtTime(options.frequency || 20000, this.synthesizer.daw.context.currentTime, 0);
+    this.gain.setTargetAtTime(options.gain || 0, this.synthesizer.daw.context.currentTime, 0);
+    this.Q.setTargetAtTime(options.Q || 0, this.synthesizer.daw.context.currentTime, 0);
+    this.connect(this.synthesizer.output);
+    this.dest = this.synthesizer.output;
 
     this.setType = this.setType.bind(this);
     this.setFrequency = this.setFrequency.bind(this);
@@ -362,15 +362,15 @@ class Filter extends BiquadFilterNode {
   }
 
   setFrequency(freq) {
-    this.frequency.setTargetAtTime(freq, this.context.currentTime, 0);
+    this.frequency.setTargetAtTime(freq, this.synthesizer.daw.context.currentTime, 0);
   }
 
   setGain(gain) {
-    this.gain.setTargetAtTime(gain, this.context.currentTime, 0);
+    this.gain.setTargetAtTime(gain, this.synthesizer.daw.context.currentTime, 0);
   }
 
   setQ(q) {
-    this.Q.setTargetAtTime(q, this.context.currentTime, 0);
+    this.Q.setTargetAtTime(q, this.synthesizer.daw.context.currentTime, 0);
   }
 }
 

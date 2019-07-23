@@ -16,16 +16,18 @@ const DawManager = {
 
 const DAW = function() {
   this.context = new AudioContext();
+  this.masterGain = this.context.createGain();
   this.synthesizers = {};
   this.pianoRoll = null;
 };
 
 DAW.prototype.addSynthesizer = function(synthData) {
-  //  synths must arrive with a unique name property
-  //  either from saved preset or unique number
-  this.synthesizers[synthData.name] = SynthSaveLoad.load(synthData);
-  SynthManager.synthesizer = null;
+  //  use synthData of type which is saved by WebSynth
+  SynthSaveLoad.load(this, synthData);
+  this.synthesizers[synthData.name] = SynthManager.synthesizer;
+  SynthManager.synthesizer.output.connect(this.masterGain); 
   SynthViews.add(synth);
+  SynthManager.synthesizer = null;
 };
 
 export default DawManager;
