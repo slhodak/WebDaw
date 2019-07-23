@@ -9,10 +9,35 @@
 </head>
 <body class="lightBody">
   <div class="lightTitle module"><h2>webDAW</h2></div>
-  <div class="dawSynthesizers module light">
-    <h2>Synthesizers</h2>
-    <hr>
-    <div class="synthList"></div>
+  <div class="row">
+    <div class="dawSynthesizers module light">
+      <h2>Synthesizers</h2>
+      <hr>
+      <div class="synthList"></div>
+    </div>
+    <div class="module save light">
+      <h3>Save Synth Preset</h3>
+      <hr>
+      <form class="savePreset">
+        <div class="row">
+          <input type="text" name="presetName" placeholder="name">
+          <button class="saveButton" type="submit">Save</button>
+        </div>
+      </form>
+      <button class="overwrite false" type="button">Overwrite</button>
+    </div>
+    <div class="module load light">
+      <h3>Load Synth Preset</h3>
+      <hr>
+      <select name="presets" class="presetSelector">
+        <option>-- Preset Name --</option>
+      </select>
+      <button class="loadButton" type="button">Load</button>
+      <div class="presetPreview">
+        <!-- <p>Overview</p>
+        <div class="presetPreview"></div> -->
+      </div>
+    </div>
   </div>
   <div class="dawPianoRoll module light">
     <h2>Piano Roll</h2>
