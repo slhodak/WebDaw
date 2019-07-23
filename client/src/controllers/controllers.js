@@ -138,3 +138,23 @@ const FormController = {
 // FormController.initializeLoadPresetModule();
 // FormController.initializeSavePresetModule();
 FormController.initializeDarkModeButton();
+
+
+const SynthListController = {
+  addVolumeListener(slider) {
+    slider.addEventListener('change', (event) => {
+      Manager.daw.synth[event.currentTarget.dataset.id].setGain(event.target.value);
+    });
+    return slider;
+  },
+  addMuteListener(button) {
+    button.addEventListener('mousedown', (event) => {
+      Manager.daw.synth[event.currentTarget.dataset.id].toggleMute();
+    });
+    return button;
+  }
+};
+
+export { 
+  SynthListController
+}

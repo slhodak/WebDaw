@@ -1,20 +1,21 @@
 const Templates = {
-  synthesizer(synth = {}) {
-    //  use synth model (containing http link) to create device button
-    return `<div class="synthesizer row">
-    <a href="${synth.link}">Open</a>
-    ${Templates.slider('volume', 'Volume', 0, 1, 0.75, 0.001)}
-    </div>`;
+  slider(id, name, title, min, max, value, step) {
+    let slider = document.createElement('div');
+    slider.setAttribute('class', 'slider row');
+    slider.setAttribute('data-id', id);
+    slider.innerHTML = 
+      `<label for="${name}">${title}: </label>
+      <input class="${name}" name="${title}" type="range" min="${min}" max="${max}" value="${value}" step="${step}">
+      <div class="${name}Display">${value}</div>`
+    return slider;
   },
-  slider(name, title, min, max, value, step) {
-    return (
-      `<div class="slider row">
-        <label for="${name}">${title}: </label>
-        <input class="${name}" name="${title}" type="range" min="${min}" max="${max}" value="${value}" step="${step}">
-        <div class="${name}Display">${value}</div>
-      </div>`
-    );
-  },
+  button(id, name, text) {
+    let button = document.createElement('div');
+    button.setAttribute('class', name);
+    button.setAttribute('data-id', id);
+    button.innerHTML = `<button type="button">${text}</button>`;
+    return button;
+  }
 };
 
 export default Templates;
