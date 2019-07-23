@@ -1,7 +1,9 @@
 const host = 'http://localhost:9000';
 
 const scripts = [
-  '/src/daw.js'
+  '/client/src/daw.js',
+  '/client/src/controllers/controllers.js',
+  '/client/config/config.js'
 ];
 
 let reference = document.getElementsByClassName('scripts')[0];
