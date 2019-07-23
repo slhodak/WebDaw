@@ -4,10 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="style.css" type="text/css" rel="stylesheet">
   <title>WebDAW</title>
 </head>
-<body>
-
+<body class="lightBody">
+  <div class="title lightTitle row module">
+    <h2>webDAW</h2>
+    <button class="darkMode light" type="button">dark mode</button>
+  </div>
+  <div class="row">
+    <div class="dawSynthesizers module light">
+      <h2>Synthesizers</h2>
+      <hr>
+      <div class="synthList"></div>
+    </div>
+    <div class="module save light">
+      <h3>Save Project</h3>
+      <hr>
+      <form class="saveProject">
+        <div class="row">
+          <input type="text" name="projectName" placeholder="name">
+          <button class="saveButton" type="submit">Save</button>
+        </div>
+      </form>
+      <button class="overwrite false" type="button">Overwrite</button>
+    </div>
+    <div class="module load light">
+      <h3>Load Project</h3>
+      <hr>
+      <select name="projects" class="projectSelector">
+        <option>-- Project Name --</option>
+      </select>
+      <button class="loadButton" type="button">Load</button>
+      <div class="projectPreview">
+        <!-- <p>Overview</p>
+        <div class="projectPreview"></div> -->
+      </div>
+    </div>
+  </div>
+  <div class="dawPianoRoll module light">
+    <h2>Piano Roll</h2>
+    <hr>
+    <div class="pianoRoll"></div>
+  </div>
   <div class="scripts"></div>
   <script src="bundle.js"></script>
 </body>

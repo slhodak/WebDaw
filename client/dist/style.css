@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+
+@keyframes saveConfirmation {
+  from {
+    background-color: rgb(241, 241, 241);
+  }
+  to {
+    background-color: rgb(45, 184, 45);
+  }
+}
+
+.confirmation {
+  animation-name: saveConfirmation;
+  animation-duration: 250ms;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+}
+
+html {
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+body {
+  margin: 0px;
+  padding: 5px;
+}
+
+.darkBody {
+  background-color: rgb(37, 37, 37);
+}
+
+.lightBody {
+  background-color: rgb(241, 241, 241);
+}
+
+h4, h3, h2 {
+  margin: 0px;
+  padding: 0px;
+}
+
+.lightTitle {
+  background-image: linear-gradient(to right, rgb(241, 241, 241), rgb(241, 241, 241) 15%, rgb(0, 91, 133) 40%, rgb(0, 133, 78) 60%, rgb(129, 0, 133) 80%, rgb(180, 124, 21) 100%);
+  justify-content: space-between;
+  box-shadow: 0px 0px 5px 0px rgb(190, 190, 190);
+}
+
+.darkTitle {
+  background-image: linear-gradient(to right, rgb(14, 14, 14), rgb(14, 14, 14) 15%, rgb(0, 91, 133) 40%, rgb(0, 133, 78) 60%, rgb(129, 0, 133) 80%, rgb(180, 124, 21) 100%);
+  color: rgb(211, 211, 211);
+  justify-content: space-between;
+  box-shadow: 0px 0px 3px 0px rgb(180, 180, 180);
+}
+
+.darkMode {
+  border-radius: 10px;
+}
+
+.light {
+  background-color: rgb(241, 241, 241);
+  color: black;
+  box-shadow: 0px 0px 5px 0px rgb(190, 190, 190);
+}
+
+.dark {
+  background-color: rgb(37, 37, 37);
+  color: rgb(211, 211, 211);
+  box-shadow: 0px 0px 3px 0px rgb(180, 180, 180);
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row .module {
+  flex-grow: 1;
+}
+
+ul {
+  padding-left: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.saveProject {
+  margin-top: 5px;
+}
+
+.polyButton, .saveButton, .loadButton {
+  height: 30px;
+  width: 55px;
+  font-weight: 700;
+}
+
+.overwrite {
+  height: 30px;
+  width: 70px;
+  font-weight: 700;
+  border: 1px solid rgb(218, 218, 218);
+  margin-top: 8px;
+}
+
+.false {
+  background-color: rgb(216, 134, 119);
+}
+
+.true {
+  background-color: rgb(97, 228, 97);
+}
+.off {
+  background-color: gray;
+}
+
+.on {
+  background-color: rgb(167, 192, 246);
+}
+
+.oscillatorControls {
+  width: 60%;
+}
+
+.module {
+  border-radius: 8px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.filterControls {
+  width: 40%;
+}
+
+.routerDefault {
+  margin: 0px;
+  color: rgb(37, 37, 37);
+  flex-grow: 1;
+  background-color: rgb(228, 228, 228);
+  text-align: center;
+}
+
+.routingTable {
+  min-height: 10px;
+  border: 1px solid black;
+}
+
+.sources {
+  flex-grow: 1;
+}
+
+.destinations {
+  flex-grow: 1;
+}
+
+.routerCell {
+  height: 1rem;
+  flex-grow: 1;
+  min-width: 100px;
+  padding: 5px;
+  text-align: center;
+}
+
+.icon {
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #898989;
+  color: black;
+}
+
+.borderTop {
+  border-top: 1px solid black;
+}
+
+.destination {
+  border-left: 1px solid black;
+}
+
+.eligible {
+  background-color: rgb(172, 200, 245);
+}
+
+.ineligible {
+  background-color: rgb(212, 147, 158);
+}
+
+.connected {
+  background-color: rgb(176, 235, 159);
+}

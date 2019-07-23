@@ -5,7 +5,7 @@ const port = 9000;
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, '../client/dist')));
-app.use('/src', express.static(path.resolve(__dirname, '../client/src')));
+app.use('/client', express.static(path.resolve(__dirname, '../client')));
 
 app.listen(port, () => {
   console.log(`DAW available on port ${port}`);
