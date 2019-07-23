@@ -6,7 +6,9 @@ import { SynthViews } from './views/views.js';
 const DawManager = {
   daw: null,
   createDAWIfNoneExists() {
-    DawManager.daw = new DAW();
+    if (!DawManager.daw) {
+      DawManager.daw = new DAW();
+    }
   },
   darkMode: false
 };
