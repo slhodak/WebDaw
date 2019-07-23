@@ -138,7 +138,6 @@ class Synthesizer {
 
   togglePoly() {
     this.poly = !this.poly;
-    FormViews.updatePolyButton(this.poly);
   }
 
   setGain(value) {
@@ -184,14 +183,12 @@ class Router {
         eligibleDestinations
       };
     });
-    RouterViews.updateTable(this.table);
   }
 
   setRoute(source, destination) {
     source.setDestination(destination);
     this.table[source.id].dest = destination;
     this.updateRouter();
-    RouterViews.updateTable(this.table);
   }
 }
 

@@ -1,11 +1,11 @@
 import { Network } from '../../config/config.js';
-import Manager from '../daw.js';
+import DawManager from '../daw.js';
 
 //  General Controls
 
 const Controls = {
   83: () => {
-    Manager.daw.addSynthesizer();
+    DawManager.daw.addSynthesizer();
   },
   // 70: () => {
   //   Manager.synthesizer.addFilter();
@@ -23,8 +23,8 @@ const Controls = {
 window.addEventListener('keydown', (e) => {
   console.log(e.keyCode);
   if (e.target.type !== 'text') {
-    if (!Manager.daw) {
-      Manager.createDAWIfNoneExists();
+    if (!DawManager.daw) {
+      DawManager.createDAWIfNoneExists();
       if (Controls[e.keyCode] && e.keyCode !== 32) {
         Controls[e.keyCode]();
       }
@@ -43,13 +43,13 @@ const FormController = {
   initializeSaveButton() {
     document.getElementsByClassName('savePreset')[0].addEventListener('submit', (e) => {
       e.preventDefault();
-      if (Manager.synthesizer) {
-        fetch(`${Network.host}/preset?overwrite=${Manager.overwrite}`, {
+      if (DawManager.synthesizer) {
+        fetch(`${Network.host}/preset?overwrite=${DawManager.overwrite}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(Preset.save(Manager.synthesizer, e.srcElement[0].value))
+          body: JSON.stringify(Preset.save(DawManager.synthesizer, e.srcElement[0].value))
         })
           .then(response => response.json())
           .then(body => {
@@ -72,12 +72,12 @@ const FormController = {
   initializeOverwriteButton() {
     let overwrite = document.getElementsByClassName('overwrite')[0];
     overwrite.addEventListener('mousedown', (e) => {
-      if (Manager.overwrite === false) {
+      if (DawManager.overwrite === false) {
         overwrite.classList.replace('false', 'true');
       } else {
         overwrite.classList.replace('true', 'false');
       }
-      Manager.overwrite = !Manager.overwrite;
+      DawManager.overwrite = !DawManager.overwrite;
     });
   },
   initializeLoadPresetModule() {
@@ -114,7 +114,7 @@ const FormController = {
   initializeDarkModeButton() {
     document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
       let newMode, oldMode;
-      if (Manager.darkMode === true) {
+      if (DawManager.darkMode === true) {
         oldMode = 'dark';
         newMode = 'light';
       } else {
@@ -129,7 +129,7 @@ const FormController = {
       document.body.setAttribute('class', `${newMode}Body`);
       document.getElementsByClassName('title')[0].setAttribute('class', `title module row ${newMode}Title`);
       e.target.innerText = `${oldMode} mode`;
-      Manager.darkMode = !Manager.darkMode;
+      DawManager.darkMode = !DawManager.darkMode;
     });
   }
 }
@@ -143,13 +143,13 @@ FormController.initializeDarkModeButton();
 const SynthListController = {
   addVolumeListener(slider) {
     slider.addEventListener('change', (event) => {
-      Manager.daw.synth[event.currentTarget.dataset.id].setGain(event.target.value);
+      DawManager.daw.synth[event.currentTarget.dataset.id].setGain(event.target.value);
     });
     return slider;
   },
   addMuteListener(button) {
     button.addEventListener('mousedown', (event) => {
-      Manager.daw.synth[event.currentTarget.dataset.id].toggleMute();
+      DawManager.daw.synth[event.currentTarget.dataset.id].toggleMute();
     });
     return button;
   }
