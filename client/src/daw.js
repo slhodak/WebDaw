@@ -1,7 +1,8 @@
+import Views from './views/views.js';
+
 //  Browser-Based DAW
 //  Brings synths and sequencer together (and other tools)
 
-//  require subcomponents accessible via network?
 const Manager = {
   daw: null,
   createDAWIfNoneExists() {
@@ -13,6 +14,11 @@ const Manager = {
 const DAW = function() {
   this.synthesizers = [];
   this.pianoRoll = null;
+};
+
+DAW.prototype.addSynthesizer = function(synth) {
+  this.synthesizers.push(synth);
+  Views.addSynthesizer(synth);
 };
 
 export default Manager;
