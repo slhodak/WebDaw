@@ -1,5 +1,5 @@
 import { SynthViews } from './views/views.js';
-import { SynthSaveLoad } from './lib/synthSaveLoad.js';
+import SynthSaveLoad from './lib/synthSaveLoad.js';
 
 //  Browser-Based DAW
 //  Brings synths and sequencer together (and other tools)
@@ -22,7 +22,7 @@ const DAW = function() {
 };
 
 DAW.prototype.addSynthesizer = function(synthData) {
-  //  use synthData of type which is saved by WebSynth
+  //  load from WebSynth microservice
   SynthSaveLoad.load(this, synthData);
   this.synthesizers[synthData.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain); 

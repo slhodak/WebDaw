@@ -44,7 +44,7 @@ const FormController = {
     document.getElementsByClassName('savePreset')[0].addEventListener('submit', (e) => {
       e.preventDefault();
       if (DawManager.synthesizer) {
-        fetch(`${Network.host}/preset?overwrite=${DawManager.overwrite}`, {
+        fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset?overwrite=${DawManager.overwrite}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ const FormController = {
   },
   populatePresetSelector() {
     let presetSelector = document.getElementsByClassName('presetSelector')[0];
-    fetch(`http://${Network.host}:${Network.httpPort}/presetNames`)
+    fetch(`http://${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
       .then(response => response.json())
       .then(data => {
         presetSelector.innerHTML = '';
