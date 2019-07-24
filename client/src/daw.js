@@ -1,5 +1,6 @@
 import { SynthViews } from './views/views.js';
 import SynthSaveLoad from './lib/synthSaveLoad.js';
+import { SynthManager } from './synthesizer.js';
 
 //  Browser-Based DAW
 //  Brings synths and sequencer together (and other tools)
@@ -17,17 +18,23 @@ const DawManager = {
 const DAW = function() {
   this.context = new AudioContext();
   this.masterGain = this.context.createGain();
-  this.synthesizers = {};
+  this.synthesizers = { size: 0 };
   this.pianoRoll = null;
 };
 
 DAW.prototype.addSynthesizer = function(synthData) {
-  //  load from WebSynth microservice
-  SynthSaveLoad.load(this, synthData);
-  this.synthesizers[synthData.name] = SynthManager.synthesizer;
-  SynthManager.synthesizer.output.connect(this.masterGain); 
+  if (synthData) {
+    SynthSaveLoad.load(this, synthData);
+    this.synthesizers[synthData.name] = SynthManager.synthesizer;
+  } else {
+    SynthManager.createSynthesizer(this);
+    this.synthesizers[this.synthesizers.size] = SynthManager.synthesizer;
+  }
+  SynthManager.synthesizer.output.connect(this.masterGain);
+  this.synthesizers.size += 1;
   SynthViews.add(synth);
   SynthManager.synthesizer = null;
 };
+
 
 export default DawManager;
