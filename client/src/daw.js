@@ -25,14 +25,15 @@ const DAW = function() {
 DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
     SynthSaveLoad.load(this, synthData);
-    this.synthesizers[synthData.name] = SynthManager.synthesizer;
   } else {
     SynthManager.createSynthesizer(this);
-    this.synthesizers[this.synthesizers.size] = SynthManager.synthesizer;
+    synthData = { name: this.synthesizers.size };
   }
+  this.synthesizers[synthData.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  SynthViews.add(synth);
+  //  synth link includes 3000/name, synth service to use this endpoint to query DAW for details
+  SynthViews.add(synthData);
   SynthManager.synthesizer = null;
 };
 
