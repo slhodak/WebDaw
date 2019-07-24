@@ -1,8 +1,5 @@
 import Templates from './templates.js';
 import { SynthListController } from '../controllers/controllers.js';
-//  add view object
-//  add controls
-//  event emitter
 
 const SynthViews = {
   add(synth) {
