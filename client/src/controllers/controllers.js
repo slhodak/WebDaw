@@ -97,6 +97,7 @@ const SynthFormController = {
         .then(data => {
           DawManager.createDAWIfNoneExists();
           DawManager.daw.addSynthesizer(data);
+          console.log(DawManager.daw.synthesizers);
         })
         .catch(err => console.log(err));
     });
