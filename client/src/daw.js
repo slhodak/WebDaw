@@ -9,7 +9,8 @@ const DawManager = {
       DawManager.daw = new DAW();
     }
   },
-  darkMode: false
+  darkMode: false,
+  lastInFocus: Date.now()
 };
 
 const DAW = function() {

@@ -35,6 +35,23 @@ window.addEventListener('visibilitychange', (e) => {
           });
       }
     }
+  } else {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?updateSince=${DawManager.lastInFocus}`)
+      .then(response => response.json())
+      .then(updateData => {
+        console.log(updateData);
+        updateData.synthsToUpdate.forEach(synthName => {
+          if (DawManager.daw.synthesizers[synthName]) {
+            fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?name=${synth}`)
+              .then(response => response.json())
+              .then(synthData => {
+                SynthSaveLoad.updateActive(synthName, synthData);
+              })
+              .catch(error => console.log(`Fetch error: ${error}`));
+          }
+        });
+      })
+      .catch(err => console.log(err));
   }
 });
 
