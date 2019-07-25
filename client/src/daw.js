@@ -2,11 +2,6 @@ import { SynthViews } from './views/views.js';
 import SynthSaveLoad from './lib/synthSaveLoad.js';
 import { SynthManager } from './synthesizer.js';
 
-//  Browser-Based DAW
-//  Brings synths and sequencer together (and other tools)
-
-
-// meaningless change
 const DawManager = {
   daw: null,
   createDAWIfNoneExists() {
@@ -34,9 +29,7 @@ DAW.prototype.addSynthesizer = function(synthData) {
   this.synthesizers[synthData.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  //  synth link is 3000/name, synth service to use this endpoint to query DAW for details
   SynthViews.add(synthData);
-  console.log(this.synthesizers);
   SynthManager.synthesizer = null;
 };
 
