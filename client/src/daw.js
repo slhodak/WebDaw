@@ -5,6 +5,8 @@ import { SynthManager } from './synthesizer.js';
 //  Browser-Based DAW
 //  Brings synths and sequencer together (and other tools)
 
+
+// meaningless change
 const DawManager = {
   daw: null,
   createDAWIfNoneExists() {
