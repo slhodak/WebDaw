@@ -1,4 +1,18 @@
 const Templates = {
+  link(classList, text, href) {
+    let link = document.createElement('a');
+    let classes = '';
+    classList.forEach((className, index) => {
+      classes += className
+      if (index !== classList.length - 1) {
+        classes += ' '
+      }
+    });
+    link.setAttribute('class', classes);
+    link.setAttribute('href', href);
+    link.innerText = text;
+    return link;
+  },
   slider(synthName, name, title, min, max, value, step) {
     let slider = document.createElement('div');
     slider.setAttribute('class', 'slider row');

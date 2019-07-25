@@ -8,7 +8,7 @@ import { SynthManager } from './synthesizer.js';
 const DawManager = {
   daw: null,
   createDAWIfNoneExists() {
-    if (!DawManager.daw) {
+    if (DawManager.daw === null) {
       DawManager.daw = new DAW();
     }
   },
@@ -32,7 +32,7 @@ DAW.prototype.addSynthesizer = function(synthData) {
   this.synthesizers[synthData.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  //  synth link includes 3000/name, synth service to use this endpoint to query DAW for details
+  //  synth link is 3000/name, synth service to use this endpoint to query DAW for details
   SynthViews.add(synthData);
   SynthManager.synthesizer = null;
 };
