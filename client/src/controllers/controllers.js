@@ -7,22 +7,10 @@ import SynthSaveLoad from '../lib/synthSaveLoad.js';
 const Controls = {
   83: () => {
     DawManager.daw.addSynthesizer();
-  },
-  // 70: () => {
-  //   Manager.synthesizer.addFilter();
-  // },
-  // 32: () => {
-  //   if (Manager.synthesizer.globals.demoTone === false) {
-  //     Manager.synthesizer.playNote({ data: [127, 44, 65] });
-  //   } else {
-  //     Manager.synthesizer.endNote({ data: [127, 44, 65] })
-  //   }
-  //   Manager.synthesizer.globals.demoTone = !Manager.synthesizer.globals.demoTone;
-  // }
+  }
 };
 
 window.addEventListener('keydown', (e) => {
-  console.log(e.keyCode);
   if (e.target.type !== 'text') {
     DawManager.createDAWIfNoneExists();
     if (Controls[e.keyCode]) {
@@ -35,7 +23,6 @@ window.addEventListener('visibilitychange', (e) => {
   if (document.hidden) {
     for (let synth in DawManager.daw.synthesizers) {
       if (synth !== 'size') {
-        console.log(synth);
         fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths/active`, {
           method: 'POST',
           headers: {
@@ -52,12 +39,12 @@ window.addEventListener('visibilitychange', (e) => {
 });
 
 //  Save, Load, and DarkMode Buttons
-const FormController = {
+const SynthFormController = {
   initializeSavePresetModule() {
-    FormController.initializeSaveButton();
-    FormController.initializeOverwriteButton();
+    SynthFormController.enableSaveButton();
+    SynthFormController.enableOverwriteButton();
   },
-  initializeSaveButton() {
+  enableSaveButton() {
     document.getElementsByClassName('savePreset')[0].addEventListener('submit', (e) => {
       e.preventDefault();
       if (DawManager.synthesizer) {
@@ -86,25 +73,14 @@ const FormController = {
       }
     });
   },
-  initializeOverwriteButton() {
-    let overwrite = document.getElementsByClassName('overwrite')[0];
-    overwrite.addEventListener('mousedown', (e) => {
-      if (DawManager.overwrite === false) {
-        overwrite.classList.replace('false', 'true');
-      } else {
-        overwrite.classList.replace('true', 'false');
-      }
-      DawManager.overwrite = !DawManager.overwrite;
-    });
-  },
-  populatePresetSelector() {
-    let presetSelector = document.getElementsByClassName('presetSelector')[0];
-    fetch(`http://${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
+  populateSynthPresetSelector() {
+    let presetSelector = document.getElementsByClassName('synthPresetSelector')[0];
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
       .then(response => response.json())
       .then(data => {
         presetSelector.innerHTML = '';
         let option = document.createElement('option');
-        option.innerText = '-- Preset Name --';
+        option.innerText = '-- Synth Name --';
         presetSelector.append(option);
         data.names.forEach(name => {
           option = document.createElement('option');
@@ -114,29 +90,29 @@ const FormController = {
       })
       .catch(err => console.log(err));
   },
-  initializeLoadPresetButton() {
-    document.getElementsByClassName('loadButton')[0].addEventListener('mousedown', (e) => {
-      fetch(`http://${Network.host}:${Network.httpPort}/preset/?name=${document.getElementsByClassName('presetSelector')[0].value}`)
+  enableLoadSynthButton() {
+    document.getElementsByClassName('loadSynthButton')[0].addEventListener('mousedown', (e) => {
+      fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset/?name=${document.getElementsByClassName('synthPresetSelector')[0].value}`)
         .then(response => response.json())
         .then(data => {
-          Preset.load(data);
+          DawManager.createDAWIfNoneExists();
+          DawManager.daw.addSynthesizer(data);
         })
         .catch(err => console.log(err));
     });
   },
-  //  //
   initializeAddSynthModule() {
-    FormController.initializeNewSynthButton();
-    // FormController.populatePresetSelector();
-    // FormController.initializeLoadPresetButton();
+    SynthFormController.enableNewSynthButton();
+    SynthFormController.populateSynthPresetSelector();
+    SynthFormController.enableLoadSynthButton();
   },
-  initializeNewSynthButton() {
+  enableNewSynthButton() {
     document.getElementsByClassName('newSynth')[0].addEventListener('mousedown', (e) => {
       DawManager.createDAWIfNoneExists();
       DawManager.daw.addSynthesizer();
     });
   },
-  initializeDarkModeButton() {
+  enableDarkModeButton() {
     document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
       let newMode, oldMode;
       if (DawManager.darkMode === true) {
@@ -160,10 +136,9 @@ const FormController = {
 }
 
 // TODO: Enable Save/Load Projects
-// FormController.initializeLoadPresetModule();
 // FormController.initializeSavePresetModule();
-FormController.initializeAddSynthModule();
-FormController.initializeDarkModeButton();
+SynthFormController.initializeAddSynthModule();
+SynthFormController.enableDarkModeButton();
 
 
 const SynthListController = {
