@@ -1,5 +1,5 @@
 const Templates = {
-  link(classList, text, href) {
+  link(classList, text, href, blankTarget) {
     let link = document.createElement('a');
     let classes = '';
     classList.forEach((className, index) => {
@@ -10,6 +10,7 @@ const Templates = {
     });
     link.setAttribute('class', classes);
     link.setAttribute('href', href);
+    blankTarget ? link.setAttribute('target', '_blank') : null;
     link.innerText = text;
     return link;
   },
