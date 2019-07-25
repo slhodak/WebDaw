@@ -22,20 +22,6 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('visibilitychange', (e) => {
   if (document.hidden) {
     DawManager.lastInFocus = Date.now();
-    for (let synth in DawManager.daw.synthesizers) {
-      if (synth !== 'size') {
-        fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths/active`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(SynthSaveLoad.save(DawManager.daw.synthesizers[synth], synth))
-        })
-          .catch(error => {
-            console.log(`Fetch error: ${error}`);
-          });
-      }
-    }
   } else {
     SynthSaveLoad.updateActives();
   }

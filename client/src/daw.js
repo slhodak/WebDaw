@@ -24,13 +24,13 @@ DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
     SynthSaveLoad.load(this, synthData);
   } else {
-    SynthManager.createSynthesizer(this);
-    synthData = { name: this.synthesizers.size };
+    SynthManager.createSynthesizer(this, { name: this.synthesizers.size });
   }
-  this.synthesizers[synthData.name] = SynthManager.synthesizer;
+  this.synthesizers[SynthManager.synthesizer.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  SynthViews.add(synthData);
+  SynthViews.add(SynthManager.synthesizer);
+  SynthSaveLoad.saveToActives(SynthManager.synthesizer);
   SynthManager.synthesizer = null;
 };
 

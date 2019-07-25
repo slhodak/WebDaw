@@ -1,10 +1,12 @@
 import { SynthManager } from '../synthesizer.js';
+import { Network } from '../../config/config.js';
+import DawManager from '../daw.js';
 
 const SynthSaveLoad = {
-  save(synthesizer, name) {
+  save(synthesizer) {
     let synthData = {
-      name,
       synthesizer: {
+        name: synthesizer.name,
         router: {},
         settings: {
           globals: {}
@@ -43,6 +45,7 @@ const SynthSaveLoad = {
   },
   load(daw, synthData) {
     SynthManager.createSynthesizer(daw, {
+      name: synthData.synthesizer.name,
       porta: synthData.synthesizer.settings.globals.porta,
       attack: synthData.synthesizer.settings.globals.attack,
       release: synthData.synthesizer.settings.globals.release,
@@ -82,6 +85,18 @@ const SynthSaveLoad = {
         destination
       );
     }
+  },
+  saveToActives(synthesizer) {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths/active`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(SynthSaveLoad.save(synthesizer))
+    })
+      .catch(error => {
+        console.log(`Fetch error: ${error}`);
+      });
   },
   updateActives() {
     fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?updateSince=${DawManager.lastInFocus}`)

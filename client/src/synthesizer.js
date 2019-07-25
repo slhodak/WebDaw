@@ -19,6 +19,7 @@ let SynthManager = {
 //  - Synthesizer
 class Synthesizer {
   constructor(daw, options = {}) {
+    this.name = options.name;
     this.daw = daw;
     this.router = new Router(this);
     this.output = daw.context.createGain();
