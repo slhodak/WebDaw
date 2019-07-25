@@ -1,5 +1,6 @@
 import { Network } from '../../config/config.js';
 import DawManager from '../daw.js';
+import SynthSaveLoad from '../lib/synthSaveLoad.js';
 
 //  General Controls
 
@@ -26,6 +27,26 @@ window.addEventListener('keydown', (e) => {
     DawManager.createDAWIfNoneExists();
     if (Controls[e.keyCode]) {
       Controls[e.keyCode]();
+    }
+  }
+});
+
+window.addEventListener('visibilitychange', (e) => {
+  if (document.hidden) {
+    for (let synth in DawManager.daw.synthesizers) {
+      if (synth !== 'size') {
+        console.log(synth);
+        fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset?overwrite=true`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(SynthSaveLoad.save(DawManager.daw.synthesizers[synth], synth))
+        })
+          .catch(error => {
+            console.log(`Fetch error: ${error}`);
+          });
+      }
     }
   }
 });

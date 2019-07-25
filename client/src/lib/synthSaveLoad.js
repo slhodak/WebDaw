@@ -1,9 +1,8 @@
 import { SynthManager } from '../synthesizer.js';
 
 const SynthSaveLoad = {
-  save(synthesizer, name, overwrite) {
+  save(synthesizer, name) {
     let synthData = {
-      overwrite,
       name,
       synthesizer: {
         router: {},
@@ -17,7 +16,7 @@ const SynthSaveLoad = {
     for (let route in synthesizer.router.table) {
       synthData.synthesizer.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
     }
-    synthData.synthesizer.settings.globals.volume = synthesizer.masterGain.gain.value;
+    synthData.synthesizer.settings.globals.volume = synthesizer.output.gain.value;
     synthData.synthesizer.settings.poly = synthesizer.poly;
     synthData.synthesizer.settings.globals.porta = synthesizer.globals.porta;
     synthData.synthesizer.settings.globals.attack = synthesizer.globals.attack;
@@ -73,7 +72,7 @@ const SynthSaveLoad = {
     for (let route in synthData.synthesizer.router) {
       let destination;
       if (synthData.synthesizer.router[route] === 'main out') {
-        destination = SynthManager.synthesizer.masterGain;
+        destination = SynthManager.synthesizer.output;
       } else {
         destination = SynthManager.synthesizer.router.table[synthData.synthesizer.router[route]].node;
       }
