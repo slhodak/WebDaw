@@ -21,6 +21,7 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('visibilitychange', (e) => {
   if (document.hidden) {
+    DawManager.lastInFocus = Date.now();
     for (let synth in DawManager.daw.synthesizers) {
       if (synth !== 'size') {
         fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths/active`, {
