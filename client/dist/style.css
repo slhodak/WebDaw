@@ -90,7 +90,11 @@ ul {
   margin-top: 5px;
 }
 
-.polyButton, .saveButton, .loadButton {
+.load {
+  width: 180px;
+}
+
+.polyButton, .saveButton, .loadButton, .newSynth {
   height: 30px;
   width: 55px;
   font-weight: 700;
@@ -188,4 +192,33 @@ ul {
 
 .connected {
   background-color: rgb(176, 235, 159);
+}
+
+
+/* NEW */
+
+.synthesizer {
+  display: flex;
+  border: 1px solid black;
+  border-radius: 5px;
+  align-items: center;
+}
+
+.synthLink {
+  border: 3px solid white;
+  border-radius: 8px;
+  background-color: green;
+  color: white;
+  font-weight: 700;
+  padding: 0px 4px 0px 4px;
+  margin: 5px;
+  text-decoration: none;
+}
+
+/* .synthLink a {
+  
+} */
+
+.synthLink:hover {
+  color: rgb(185, 185, 255);
 }
