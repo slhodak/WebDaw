@@ -36,7 +36,7 @@ window.addEventListener('visibilitychange', (e) => {
     for (let synth in DawManager.daw.synthesizers) {
       if (synth !== 'size') {
         console.log(synth);
-        fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset?overwrite=true`, {
+        fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths/active`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
