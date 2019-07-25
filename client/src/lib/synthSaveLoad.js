@@ -82,6 +82,19 @@ const SynthSaveLoad = {
         destination
       );
     }
+  },
+  updateActives() {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?updateSince=${DawManager.lastInFocus}`)
+      .then(response => response.json())
+      .then(updateData => {
+        console.log(updateData);
+        updateData.synthsToUpdate.forEach(synthName => {
+          if (DawManager.daw.synthesizers[synthName]) {
+            //  replace that synth's model with the new one...
+          }
+        });
+      })
+      .catch(err => console.log(err));
   }
 };
 
