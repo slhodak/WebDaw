@@ -34,6 +34,7 @@ DAW.prototype.addSynthesizer = function(synthData) {
   this.synthesizers.size += 1;
   //  synth link is 3000/name, synth service to use this endpoint to query DAW for details
   SynthViews.add(synthData);
+  console.log(this.synthesizers);
   SynthManager.synthesizer = null;
 };
 
