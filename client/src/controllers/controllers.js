@@ -13,9 +13,9 @@ const Controls = {
 
 window.onload = (event) => {
   // TODO: Enable Save/Load Projects
-  // FormController.initializeSavePresetModule();
+  // DawFormController.initializeSaveProjectModule();
   SynthFormController.initializeAddSynthModule();
-  SynthFormController.enableDarkModeButton();
+  DawFormController.enableDarkModeButton();
 };
 
 window.addEventListener('keydown', (e) => {
@@ -35,11 +35,35 @@ window.addEventListener('visibilitychange', (e) => {
   }
 });
 
-//  Save, Load, and DarkMode Buttons
+//  Save and Load Synth Buttons
 const SynthFormController = {
-  initializeSavePresetModule() {
-    SynthFormController.enableSaveButton();
-    SynthFormController.enableOverwriteButton();
+  initializeAddSynthModule() {
+    SynthFormController.enableNewSynthButton();
+    SynthViews.populateSynthPresetSelector();
+    SynthFormController.enableLoadSynthButton();
+  },
+  enableLoadSynthButton() {
+    document.getElementsByClassName('loadSynthButton')[0].addEventListener('mousedown', (e) => {
+      SynthSaveLoad.getOneSynth(document.getElementsByClassName('synthPresetSelector')[0].value);
+    });
+  },
+  enableNewSynthButton() {
+    document.getElementsByClassName('newSynth')[0].addEventListener('mousedown', (e) => {
+      DawManager.createDAWIfNoneExists();
+      DawManager.daw.addSynthesizer();
+    });
+  }
+}
+
+const DawFormController = {
+  initializeSaveProjectModule() {
+    DawFormController.enableSaveButton();
+    DawFormController.enableOverwriteButton();
+  },
+  enableDarkModeButton() {
+    document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
+      DawViews.toggleDarkMode();
+    });
   },
   enableSaveButton() {
     document.getElementsByClassName('savePreset')[0].addEventListener('submit', (e) => {
@@ -70,28 +94,18 @@ const SynthFormController = {
       }
     });
   },
-  enableLoadSynthButton() {
-    document.getElementsByClassName('loadSynthButton')[0].addEventListener('mousedown', (e) => {
-      SynthSaveLoad.getOneSynth(document.getElementsByClassName('synthPresetSelector')[0].value);
+  enableOverwriteButton() {
+    let overwrite = document.getElementsByClassName('overwrite')[0];
+    overwrite.addEventListener('mousedown', (e) => {
+      if (DawManager.overwrite === false) {
+        overwrite.classList.replace('false', 'true');
+      } else {
+        overwrite.classList.replace('true', 'false');
+      }
+      DawManager.overwrite = !DawManager.overwrite;
     });
   },
-  initializeAddSynthModule() {
-    SynthFormController.enableNewSynthButton();
-    SynthViews.populateSynthPresetSelector();
-    SynthFormController.enableLoadSynthButton();
-  },
-  enableNewSynthButton() {
-    document.getElementsByClassName('newSynth')[0].addEventListener('mousedown', (e) => {
-      DawManager.createDAWIfNoneExists();
-      DawManager.daw.addSynthesizer();
-    });
-  },
-  enableDarkModeButton() {
-    document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
-      DawViews.toggleDarkMode();
-    });
-  }
-}
+};
 
 const SynthListController = {
   addVolumeListener(slider) {
