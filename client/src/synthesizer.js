@@ -52,6 +52,48 @@ class Synthesizer {
     this.setPorta = this.setPorta.bind(this);
   }
 
+  update(synthesizer) {
+    this.name = synthesizer.name;
+    this.porta = synthesizer.settings.globals.porta;
+    this.attack = synthesizer.settings.globals.attack;
+    this.release = synthesizer.settings.globals.release;
+    this.poly = synthesizer.settings.poly;
+
+    this.oscillators = [];
+    synthesizer.oscillators.forEach(osc => {
+      this.addOscillator({
+        semitoneOffset: osc.semitoneOffset,
+        fineDetune: osc.fineDetune,
+        volume: osc.volume,
+        type: osc.type
+      });
+    });
+    
+    this.filters = [];
+    synthesizer.filters.forEach(filt => {
+      this.addFilter({
+        type: filt.type,
+        frequency: filt.frequency,
+        gain: filt.gain,
+        Q: filt.Q
+      });
+    });
+
+    for (let route in synthesizer.router) {
+      let destination;
+      if (synthesizer.router[route] === 'main out') {
+        destination = this.output;
+      } else {
+        destination = this.router.table[synthesizer.router[route]].node;
+      }
+
+      this.router.setRoute(
+        this.router.table[route].node,
+        destination
+      );
+    }
+  }
+
   playNote(midiMessage) {
     if (this.poly) {
       this.oscillators.forEach(osc => {

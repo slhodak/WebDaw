@@ -104,10 +104,9 @@ const SynthSaveLoad = {
       .then(data => {
         if (!data.message) {
           const { synthsToUpdate } = data;
-          synthsToUpdate.forEach(synth => {
-            if (DawManager.daw.synthesizers[synth.name]) {
-              //  replace that synth's model with the new one...
-              console.log(synth.name);
+          synthsToUpdate.forEach(synthesizer => {
+            if (DawManager.daw.synthesizers[synthesizer.name]) {
+              DawManager.daw.synthesizers[synthesizer.name].update(synthesizer);
             }
           });
         } else {
