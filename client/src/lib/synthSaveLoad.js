@@ -128,7 +128,7 @@ const SynthSaveLoad = {
     fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
       .then(response => response.json())
       .then(data => {
-        callback(data);
+        callback(null, data);
       })
       .catch(err => callback(err));
   }
