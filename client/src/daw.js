@@ -10,7 +10,7 @@ const DawManager = {
     }
   },
   darkMode: false,
-  lastInFocus: Date.now()
+  lastVisible: Date.now()
 };
 
 const DAW = function() {
@@ -22,6 +22,7 @@ const DAW = function() {
 
 DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
+    console.log('loading synth: ', synthData);
     SynthSaveLoad.load(this, synthData);
   } else {
     SynthManager.createSynthesizer(this, { name: this.synthesizers.size });

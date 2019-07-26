@@ -21,7 +21,7 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('visibilitychange', (e) => {
   if (document.hidden) {
-    DawManager.lastInFocus = Date.now();
+    DawManager.lastVisible = Date.now();
   } else {
     SynthSaveLoad.updateActives();
   }
@@ -57,7 +57,7 @@ const SynthFormController = {
             }
           })
           .catch(err => {
-            console.log(err);
+            console.error(err);
           });
       }
     });
@@ -77,18 +77,18 @@ const SynthFormController = {
           presetSelector.append(option);
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   },
   enableLoadSynthButton() {
     document.getElementsByClassName('loadSynthButton')[0].addEventListener('mousedown', (e) => {
       fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset/?name=${document.getElementsByClassName('synthPresetSelector')[0].value}`)
         .then(response => response.json())
-        .then(data => {
+        .then(synthData => {
           DawManager.createDAWIfNoneExists();
-          DawManager.daw.addSynthesizer(data);
+          DawManager.daw.addSynthesizer(synthData);
           console.log(DawManager.daw.synthesizers);
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     });
   },
   initializeAddSynthModule() {
