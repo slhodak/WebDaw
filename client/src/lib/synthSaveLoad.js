@@ -114,6 +114,15 @@ const SynthSaveLoad = {
         }
       })
       .catch(err => console.error(`Error fetching actives: ${err}`));
+  },
+  getOneSynth(name) {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset/?name=${name}`)
+      .then(response => response.json())
+      .then(synthData => {
+        DawManager.createDAWIfNoneExists();
+        DawManager.daw.addSynthesizer(synthData);
+      })
+      .catch(err => console.error(err));
   }
 };
 

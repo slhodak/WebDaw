@@ -81,13 +81,7 @@ const SynthFormController = {
   },
   enableLoadSynthButton() {
     document.getElementsByClassName('loadSynthButton')[0].addEventListener('mousedown', (e) => {
-      fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset/?name=${document.getElementsByClassName('synthPresetSelector')[0].value}`)
-        .then(response => response.json())
-        .then(synthData => {
-          DawManager.createDAWIfNoneExists();
-          DawManager.daw.addSynthesizer(synthData);
-        })
-        .catch(err => console.error(err));
+      SynthSaveLoad.getOneSynth(document.getElementsByClassName('synthPresetSelector')[0].value);
     });
   },
   initializeAddSynthModule() {
