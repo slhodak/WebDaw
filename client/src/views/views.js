@@ -22,6 +22,13 @@ const DawViews = {
       document.getElementsByClassName('title')[0].setAttribute('class', `title module row ${newMode}Title`);
       e.target.innerText = `${oldMode} mode`;
       DawManager.darkMode = !DawManager.darkMode;
+  },
+  toggleOverwrite() {
+    if (DawManager.overwrite === false) {
+      overwrite.classList.replace('false', 'true');
+    } else {
+      overwrite.classList.replace('true', 'false');
+    }
   }
 };
 

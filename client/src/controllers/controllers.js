@@ -97,11 +97,7 @@ const DawFormController = {
   enableOverwriteButton() {
     let overwrite = document.getElementsByClassName('overwrite')[0];
     overwrite.addEventListener('mousedown', (e) => {
-      if (DawManager.overwrite === false) {
-        overwrite.classList.replace('false', 'true');
-      } else {
-        overwrite.classList.replace('true', 'false');
-      }
+      DawViews.toggleOverwrite();
       DawManager.overwrite = !DawManager.overwrite;
     });
   },
