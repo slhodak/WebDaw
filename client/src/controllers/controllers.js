@@ -49,7 +49,7 @@ const SynthFormController = {
             if (body.error === 'exists') {
               window.alert('A preset already exists with that name.\nPlease choose another name or select the "overwrite" option.');
             } else {
-              FormController.populatePresetSelector();
+              FormController.populateSynthPresetSelector();
               document.getElementsByClassName('save')[0].setAttribute('class', 'module save confirmation');
               setTimeout(() => {
                 document.getElementsByClassName('save')[0].setAttribute('class', 'module save');
@@ -86,7 +86,6 @@ const SynthFormController = {
         .then(synthData => {
           DawManager.createDAWIfNoneExists();
           DawManager.daw.addSynthesizer(synthData);
-          console.log(DawManager.daw.synthesizers);
         })
         .catch(err => console.error(err));
     });
