@@ -1,6 +1,7 @@
 import { Network } from '../../config/config.js';
 import DawManager from '../daw.js';
 import SynthSaveLoad from '../lib/synthSaveLoad.js';
+import { SynthViews, DawViews } from '../views/views.js';
 
 //  General Controls
 
@@ -62,23 +63,6 @@ const SynthFormController = {
       }
     });
   },
-  populateSynthPresetSelector() {
-    let presetSelector = document.getElementsByClassName('synthPresetSelector')[0];
-    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
-      .then(response => response.json())
-      .then(data => {
-        presetSelector.innerHTML = '';
-        let option = document.createElement('option');
-        option.innerText = '-- Synth Name --';
-        presetSelector.append(option);
-        data.names.forEach(name => {
-          option = document.createElement('option');
-          option.innerText = name;
-          presetSelector.append(option);
-        });
-      })
-      .catch(err => console.error(err));
-  },
   enableLoadSynthButton() {
     document.getElementsByClassName('loadSynthButton')[0].addEventListener('mousedown', (e) => {
       SynthSaveLoad.getOneSynth(document.getElementsByClassName('synthPresetSelector')[0].value);
@@ -86,7 +70,7 @@ const SynthFormController = {
   },
   initializeAddSynthModule() {
     SynthFormController.enableNewSynthButton();
-    SynthFormController.populateSynthPresetSelector();
+    SynthViews.populateSynthPresetSelector();
     SynthFormController.enableLoadSynthButton();
   },
   enableNewSynthButton() {
@@ -97,23 +81,7 @@ const SynthFormController = {
   },
   enableDarkModeButton() {
     document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
-      let newMode, oldMode;
-      if (DawManager.darkMode === true) {
-        oldMode = 'dark';
-        newMode = 'light';
-      } else {
-        oldMode = 'light';
-        newMode = 'dark';
-      }
-      Array.from(document.getElementsByClassName(oldMode)).forEach(element => {
-        let classes = Array.from(element.classList).filter(name => name !== oldMode);
-        classes.push(newMode);
-        element.setAttribute('class', classes.join(' '));
-      });
-      document.body.setAttribute('class', `${newMode}Body`);
-      document.getElementsByClassName('title')[0].setAttribute('class', `title module row ${newMode}Title`);
-      e.target.innerText = `${oldMode} mode`;
-      DawManager.darkMode = !DawManager.darkMode;
+      DawViews.toggleDarkMode();
     });
   }
 }

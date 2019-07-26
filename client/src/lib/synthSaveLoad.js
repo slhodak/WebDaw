@@ -123,6 +123,14 @@ const SynthSaveLoad = {
         DawManager.daw.addSynthesizer(synthData);
       })
       .catch(err => console.error(err));
+  },
+  getSynthPresetNames(callback) {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
+      .then(response => response.json())
+      .then(data => {
+        callback(data);
+      })
+      .catch(err => callback(err));
   }
 };
 
