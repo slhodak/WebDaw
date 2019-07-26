@@ -29,7 +29,7 @@ const SynthSaveLoad = {
         semitoneOffset: osc.semitoneOffset,
         fineDetune: osc.fineDetune,
         volume: osc.volume,
-        wave: osc.wave
+        type: osc.type
       }
     });
     synthesizer.filters.forEach((filt, index) => {
@@ -43,27 +43,27 @@ const SynthSaveLoad = {
     });
     return synthData;
   },
-  load(daw, synthData) {
+  load(daw, synthesizer) {
     SynthManager.createSynthesizer(daw, {
-      name: synthData.synthesizer.name,
-      porta: synthData.synthesizer.settings.globals.porta,
-      attack: synthData.synthesizer.settings.globals.attack,
-      release: synthData.synthesizer.settings.globals.release,
-      poly: synthData.synthesizer.settings.poly
+      name: synthesizer.name,
+      porta: synthesizer.settings.globals.porta,
+      attack: synthesizer.settings.globals.attack,
+      release: synthesizer.settings.globals.release,
+      poly: synthesizer.settings.poly
     });
 
     SynthManager.synthesizer.oscillators = [];
-    synthData.synthesizer.oscillators.forEach(osc => {
+    synthesizer.oscillators.forEach(osc => {
       SynthManager.synthesizer.addOscillator({
         semitoneOffset: osc.semitoneOffset,
         fineDetune: osc.fineDetune,
         volume: osc.volume,
-        wave: osc.wave
+        type: osc.type
       });
     });
     
     SynthManager.synthesizer.filters = [];
-    synthData.synthesizer.filters.forEach(filt => {
+    synthesizer.filters.forEach(filt => {
       SynthManager.synthesizer.addFilter({
         type: filt.type,
         frequency: filt.frequency,
@@ -72,12 +72,12 @@ const SynthSaveLoad = {
       });
     });
 
-    for (let route in synthData.synthesizer.router) {
+    for (let route in synthesizer.router) {
       let destination;
-      if (synthData.synthesizer.router[route] === 'main out') {
+      if (synthesizer.router[route] === 'main out') {
         destination = SynthManager.synthesizer.output;
       } else {
-        destination = SynthManager.synthesizer.router.table[synthData.synthesizer.router[route]].node;
+        destination = SynthManager.synthesizer.router.table[synthesizer.router[route]].node;
       }
 
       SynthManager.synthesizer.router.setRoute(
@@ -95,21 +95,26 @@ const SynthSaveLoad = {
       body: JSON.stringify(SynthSaveLoad.save(synthesizer))
     })
       .catch(error => {
-        console.log(`Fetch error: ${error}`);
+        console.error(`Fetch error: ${error}`);
       });
   },
   updateActives() {
-    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?updateSince=${DawManager.lastInFocus}`)
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?dawLastVisible=${DawManager.lastVisible}`)
       .then(response => response.json())
-      .then(synthsToUpdate => {
-        console.log(synthsToUpdate);
-        synthsToUpdate.forEach(synthName => {
-          if (DawManager.daw.synthesizers[synthName]) {
-            //  replace that synth's model with the new one...
-          }
-        });
+      .then(data => {
+        if (!data.message) {
+          const { synthsToUpdate } = data;
+          synthsToUpdate.forEach(synthName => {
+            if (DawManager.daw.synthesizers[synthName]) {
+              //  replace that synth's model with the new one...
+              console.log(synthName);
+            }
+          });
+        } else {
+          console.log(data.message);
+        }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(`Error fetching actives: ${err}`));
   }
 };
 
