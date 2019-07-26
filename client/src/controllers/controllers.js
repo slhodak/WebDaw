@@ -11,6 +11,13 @@ const Controls = {
   }
 };
 
+window.onload = (event) => {
+  // TODO: Enable Save/Load Projects
+  // FormController.initializeSavePresetModule();
+  SynthFormController.initializeAddSynthModule();
+  SynthFormController.enableDarkModeButton();
+};
+
 window.addEventListener('keydown', (e) => {
   if (e.target.type !== 'text') {
     DawManager.createDAWIfNoneExists();
@@ -85,12 +92,6 @@ const SynthFormController = {
     });
   }
 }
-
-// TODO: Enable Save/Load Projects
-// FormController.initializeSavePresetModule();
-SynthFormController.initializeAddSynthModule();
-SynthFormController.enableDarkModeButton();
-
 
 const SynthListController = {
   addVolumeListener(slider) {
