@@ -9,6 +9,11 @@ const DawManager = {
       DawManager.daw = new DAW();
     }
   },
+  renameSynth(oldName, newName) {
+    DawManager.daw.synthesizers[newName] = DawManager.synthesizers[oldName];
+    DawManager.daw.synthesizers[newName].name = newName;
+    delete DawManager.synthesizers[oldName];
+  },
   darkMode: false,
   lastVisible: Date.now()
 };

@@ -7,5 +7,8 @@ socket.onopen = (open) => {
 };
 
 socket.onmessage = (message) => {
-
+  let data = JSON.parse(message.data);
+  if (data.rename) {
+    DawManager.renameSynth(data.rename[0], data.rename[1]);
+  }
 };
