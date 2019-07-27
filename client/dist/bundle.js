@@ -1,6 +1,7 @@
 const host = 'http://localhost:9000';
 
 const scripts = [
+  '/client/src/synthSocket.js',
   '/client/src/daw.js',
   '/client/src/controllers/controllers.js',
   '/client/config/config.js'
