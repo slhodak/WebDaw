@@ -1,4 +1,5 @@
 import { Network } from '../config/config.js';
+import DawManager from './daw.js';
 
 const socket = new WebSocket(`${Network.synthWSHost}:${Network.synthWSPort}`, 'synth');
 
