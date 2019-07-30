@@ -28,7 +28,8 @@ class Synthesizer {
       porta: options.porta || 0.05,
       attack: options.attack || 0.01,
       release: options.release || 0.1,
-      type: options.type || 'sine'
+      type: options.type || 'sine',
+      volume: 1
     };
     this.mono = {
       note: null,
@@ -37,10 +38,12 @@ class Synthesizer {
       voices: {}
     };
     this.poly = options.poly || true;
+    this.mute = false;
     this.oscillators = [];
     this.filters = [];
     this.addOscillator = this.addOscillator.bind(this);
     this.addFilter = this.addFilter.bind(this);
+    this.toggleMute = this.toggleMute.bind(this);
     this.playNote = this.playNote.bind(this);
     this.endNote = this.endNote.bind(this);
     this.findNextNote = this.findNextNote.bind(this);
@@ -92,6 +95,15 @@ class Synthesizer {
         destination
       );
     }
+  }
+
+  toggleMute() {
+    if (this.mute) {
+      this.setGain(this.volume);
+    } else {
+      this.setGain(0);
+    }
+    this.mute = !this.mute;
   }
 
   playNote(midiMessage) {
@@ -180,6 +192,7 @@ class Synthesizer {
   }
 
   setGain(value) {
+    this.volume = value;
     this.output.gain.setTargetAtTime(value, this.daw.context.currentTime, 0);
   }
 
