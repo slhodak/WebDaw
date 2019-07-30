@@ -19,6 +19,7 @@ let SynthManager = {
 //  - Synthesizer
 class Synthesizer {
   constructor(daw, options = {}) {
+    this.name = options.name;
     this.daw = daw;
     this.router = new Router(this);
     this.output = daw.context.createGain();
@@ -27,7 +28,7 @@ class Synthesizer {
       porta: options.porta || 0.05,
       attack: options.attack || 0.01,
       release: options.release || 0.1,
-      wave: 'sine'
+      type: options.type || 'sine'
     };
     this.mono = {
       note: null,
@@ -49,6 +50,48 @@ class Synthesizer {
     this.setRelease = this.setRelease.bind(this);
     this.setGain = this.setGain.bind(this);
     this.setPorta = this.setPorta.bind(this);
+  }
+
+  update(synthesizer) {
+    this.name = synthesizer.name;
+    this.porta = synthesizer.settings.globals.porta;
+    this.attack = synthesizer.settings.globals.attack;
+    this.release = synthesizer.settings.globals.release;
+    this.poly = synthesizer.settings.poly;
+
+    this.oscillators = [];
+    synthesizer.oscillators.forEach(osc => {
+      this.addOscillator({
+        semitoneOffset: osc.semitoneOffset,
+        fineDetune: osc.fineDetune,
+        volume: osc.volume,
+        type: osc.type
+      });
+    });
+    
+    this.filters = [];
+    synthesizer.filters.forEach(filt => {
+      this.addFilter({
+        type: filt.type,
+        frequency: filt.frequency,
+        gain: filt.gain,
+        Q: filt.Q
+      });
+    });
+
+    for (let route in synthesizer.router) {
+      let destination;
+      if (synthesizer.router[route] === 'main out') {
+        destination = this.output;
+      } else {
+        destination = this.router.table[synthesizer.router[route]].node;
+      }
+
+      this.router.setRoute(
+        this.router.table[route].node,
+        destination
+      );
+    }
   }
 
   playNote(midiMessage) {
@@ -229,7 +272,7 @@ class Oscillator {
     this.semitoneOffset = options.semitoneOffset || 0;
     this.fineDetune = options.fineDetune || 0;
     this.volume = options.volume || 0.75;
-    this.wave = options.wave || 'sine';
+    this.type = options.type || 'sine';
     this.porta = this.synthesizer.globals.porta;
     this.attack = this.synthesizer.globals.attack;
     this.release = this.synthesizer.globals.release;

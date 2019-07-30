@@ -1,11 +1,13 @@
+import DawManager from '../daw.js';
+import { Network } from '../../config/config.js';
 import { SynthManager } from '../synthesizer.js';
+import { SynthViews } from '../views/views.js';
 
 const SynthSaveLoad = {
-  save(synthesizer, name, overwrite) {
+  save(synthesizer) {
     let synthData = {
-      overwrite,
-      name,
       synthesizer: {
+        name: synthesizer.name,
         router: {},
         settings: {
           globals: {}
@@ -17,7 +19,7 @@ const SynthSaveLoad = {
     for (let route in synthesizer.router.table) {
       synthData.synthesizer.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
     }
-    synthData.synthesizer.settings.globals.volume = synthesizer.masterGain.gain.value;
+    synthData.synthesizer.settings.globals.volume = synthesizer.output.gain.value;
     synthData.synthesizer.settings.poly = synthesizer.poly;
     synthData.synthesizer.settings.globals.porta = synthesizer.globals.porta;
     synthData.synthesizer.settings.globals.attack = synthesizer.globals.attack;
@@ -28,7 +30,7 @@ const SynthSaveLoad = {
         semitoneOffset: osc.semitoneOffset,
         fineDetune: osc.fineDetune,
         volume: osc.volume,
-        wave: osc.wave
+        type: osc.type
       }
     });
     synthesizer.filters.forEach((filt, index) => {
@@ -42,26 +44,27 @@ const SynthSaveLoad = {
     });
     return synthData;
   },
-  load(daw, synthData) {
+  load(daw, synthesizer) {
     SynthManager.createSynthesizer(daw, {
-      porta: synthData.synthesizer.settings.globals.porta,
-      attack: synthData.synthesizer.settings.globals.attack,
-      release: synthData.synthesizer.settings.globals.release,
-      poly: synthData.synthesizer.settings.poly
+      name: synthesizer.name,
+      porta: synthesizer.settings.globals.porta,
+      attack: synthesizer.settings.globals.attack,
+      release: synthesizer.settings.globals.release,
+      poly: synthesizer.settings.poly
     });
 
     SynthManager.synthesizer.oscillators = [];
-    synthData.synthesizer.oscillators.forEach(osc => {
+    synthesizer.oscillators.forEach(osc => {
       SynthManager.synthesizer.addOscillator({
         semitoneOffset: osc.semitoneOffset,
         fineDetune: osc.fineDetune,
         volume: osc.volume,
-        wave: osc.wave
+        type: osc.type
       });
     });
     
     SynthManager.synthesizer.filters = [];
-    synthData.synthesizer.filters.forEach(filt => {
+    synthesizer.filters.forEach(filt => {
       SynthManager.synthesizer.addFilter({
         type: filt.type,
         frequency: filt.frequency,
@@ -70,12 +73,12 @@ const SynthSaveLoad = {
       });
     });
 
-    for (let route in synthData.synthesizer.router) {
+    for (let route in synthesizer.router) {
       let destination;
-      if (synthData.synthesizer.router[route] === 'main out') {
-        destination = SynthManager.synthesizer.masterGain;
+      if (synthesizer.router[route] === 'main out') {
+        destination = SynthManager.synthesizer.output;
       } else {
-        destination = SynthManager.synthesizer.router.table[synthData.synthesizer.router[route]].node;
+        destination = SynthManager.synthesizer.router.table[synthesizer.router[route]].node;
       }
 
       SynthManager.synthesizer.router.setRoute(
@@ -83,6 +86,78 @@ const SynthSaveLoad = {
         destination
       );
     }
+  },
+  saveToPresets(name) {
+    if (DawManager.synthesizer) {
+      fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset?overwrite=${DawManager.overwrite}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(Preset.save(DawManager.synthesizer, name))
+      })
+        .then(response => response.json())
+        .then(body => {
+          if (body.error === 'exists') {
+            window.alert('A preset already exists with that name.\nPlease choose another name or select the "overwrite" option.');
+          } else {
+            SynthViews.populateSynthPresetSelector();
+            document.getElementsByClassName('save')[0].setAttribute('class', 'module save confirmation');
+            setTimeout(() => {
+              document.getElementsByClassName('save')[0].setAttribute('class', 'module save');
+            }, 1000);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  },
+  saveToActives(synthesizer) {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths/active`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(SynthSaveLoad.save(synthesizer))
+    })
+      .catch(error => {
+        console.error(`Fetch error: ${error}`);
+      });
+  },
+  updateActives() {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/synths?dawLastVisible=${DawManager.lastVisible}`)
+      .then(response => response.json())
+      .then(data => {
+        if (!data.message) {
+          const { synthsToUpdate } = data;
+          synthsToUpdate.forEach(synthesizer => {
+            if (DawManager.daw.synthesizers[synthesizer.name]) {
+              DawManager.daw.synthesizers[synthesizer.name].update(synthesizer);
+            }
+          });
+        } else {
+          console.log(data.message);
+        }
+      })
+      .catch(err => console.error(`Error fetching actives: ${err}`));
+  },
+  getOneSynth(name) {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset/?name=${name}`)
+      .then(response => response.json())
+      .then(synthData => {
+        DawManager.createDAWIfNoneExists();
+        DawManager.daw.addSynthesizer(synthData);
+      })
+      .catch(err => console.error(err));
+  },
+  getSynthPresetNames(callback) {
+    fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/presetNames`)
+      .then(response => response.json())
+      .then(data => {
+        callback(null, data);
+      })
+      .catch(err => callback(err));
   }
 };
 

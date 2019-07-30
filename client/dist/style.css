@@ -94,7 +94,7 @@ ul {
   width: 180px;
 }
 
-.polyButton, .saveButton, .loadButton, .newSynth {
+.polyButton, .saveButton, .loadSynthButton, .newSynth {
   height: 30px;
   width: 55px;
   font-weight: 700;

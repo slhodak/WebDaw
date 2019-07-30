@@ -2,9 +2,6 @@ import { SynthViews } from './views/views.js';
 import SynthSaveLoad from './lib/synthSaveLoad.js';
 import { SynthManager } from './synthesizer.js';
 
-//  Browser-Based DAW
-//  Brings synths and sequencer together (and other tools)
-
 const DawManager = {
   daw: null,
   createDAWIfNoneExists() {
@@ -12,7 +9,13 @@ const DawManager = {
       DawManager.daw = new DAW();
     }
   },
-  darkMode: false
+  renameSynth(oldName, newName) {
+    DawManager.daw.synthesizers[newName] = DawManager.daw.synthesizers[oldName];
+    DawManager.daw.synthesizers[newName].name = newName;
+    delete DawManager.daw.synthesizers[oldName];
+  },
+  darkMode: false,
+  lastVisible: Date.now()
 };
 
 const DAW = function() {
@@ -26,15 +29,13 @@ DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
     SynthSaveLoad.load(this, synthData);
   } else {
-    SynthManager.createSynthesizer(this);
-    synthData = { name: this.synthesizers.size };
+    SynthManager.createSynthesizer(this, { name: this.synthesizers.size });
   }
-  this.synthesizers[synthData.name] = SynthManager.synthesizer;
+  this.synthesizers[SynthManager.synthesizer.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  //  synth link is 3000/name, synth service to use this endpoint to query DAW for details
-  SynthViews.add(synthData);
-  console.log(this.synthesizers);
+  SynthViews.add(SynthManager.synthesizer);
+  SynthSaveLoad.saveToActives(SynthManager.synthesizer);
   SynthManager.synthesizer = null;
 };
 
