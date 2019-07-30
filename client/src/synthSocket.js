@@ -4,7 +4,7 @@ import DawManager from './daw.js';
 const socket = new WebSocket(`${Network.synthWSHost}:${Network.synthWSPort}`, 'synth');
 
 socket.onopen = (open) => {
-  console.log(open);
+  console.log("Opened connection to WebSynth");
 };
 
 socket.onmessage = (message) => {
