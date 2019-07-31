@@ -28,12 +28,24 @@ const DAW = function() {
 DAW.prototype.handleMIDI = function(message) {
   if (message.data[0] === 144) {
     console.log('note on!');
-    // DawManager.daw.playNote(message);
+    this.notesOn(message);
   } else if (message.data[0] === 128) {
     console.log('note off!');
-    // DawManager.daw.endNote(message);
+    this.notesOff(message);
   }
-}
+};
+
+DAW.prototype.notesOn = function(midiMessage) {
+  for (let synth in this.synthesizers) {
+    this.synthesizers[synth].playNote(midiMessage);
+  }
+};
+
+DAW.prototype.notesOff = function(midiMessage) {
+  for (let synth in this.synthesizers) {
+    this.synthesizers[synth].endNote(midiMessage);
+  }
+};
 
 DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
