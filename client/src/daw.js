@@ -37,13 +37,17 @@ DAW.prototype.handleMIDI = function(message) {
 
 DAW.prototype.notesOn = function(midiMessage) {
   for (let synth in this.synthesizers) {
-    this.synthesizers[synth].playNote(midiMessage);
+    if (synth !== 'size') {
+      this.synthesizers[synth].playNote(midiMessage);
+    }
   }
 };
 
 DAW.prototype.notesOff = function(midiMessage) {
   for (let synth in this.synthesizers) {
-    this.synthesizers[synth].endNote(midiMessage);
+    if (synth != 'size') {
+      this.synthesizers[synth].endNote(midiMessage);
+    }
   }
 };
 
