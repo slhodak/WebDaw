@@ -25,6 +25,16 @@ const DAW = function() {
   this.pianoRoll = null;
 };
 
+DAW.prototype.handleMIDI = function(message) {
+  if (message.data[0] === 144) {
+    console.log('note on!');
+    // DawManager.daw.playNote(message);
+  } else if (message.data[0] === 128) {
+    console.log('note off!');
+    // DawManager.daw.endNote(message);
+  }
+}
+
 DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
     SynthSaveLoad.load(this, synthData);
