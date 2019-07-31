@@ -21,6 +21,7 @@ const DawManager = {
 const DAW = function() {
   this.context = new AudioContext();
   this.masterGain = this.context.createGain();
+  this.masterGain.connect(this.context.destination);
   this.synthesizers = { size: 0 };
   this.pianoRoll = null;
 };
