@@ -6,26 +6,24 @@ import { SynthViews } from '../views/views.js';
 const SynthSaveLoad = {
   save(synthesizer) {
     let synthData = {
-      synthesizer: {
-        name: synthesizer.name,
-        router: {},
-        settings: {
-          globals: {}
-        },
-        oscillators: [],
-        filters: []
-      }
+      name: synthesizer.name,
+      router: {},
+      settings: {
+        globals: {}
+      },
+      oscillators: [],
+      filters: []
     };
     for (let route in synthesizer.router.table) {
-      synthData.synthesizer.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
+      synthData.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
     }
-    synthData.synthesizer.settings.globals.volume = synthesizer.output.gain.value;
-    synthData.synthesizer.settings.poly = synthesizer.poly;
-    synthData.synthesizer.settings.globals.porta = synthesizer.globals.porta;
-    synthData.synthesizer.settings.globals.attack = synthesizer.globals.attack;
-    synthData.synthesizer.settings.globals.release = synthesizer.globals.release;
+    synthData.settings.globals.volume = synthesizer.output.gain.value;
+    synthData.settings.poly = synthesizer.poly;
+    synthData.settings.globals.porta = synthesizer.globals.porta;
+    synthData.settings.globals.attack = synthesizer.globals.attack;
+    synthData.settings.globals.release = synthesizer.globals.release;
     synthesizer.oscillators.forEach((osc, index) => {
-      synthData.synthesizer.oscillators[index] = {
+      synthData.oscillators[index] = {
         id: osc.id,
         semitoneOffset: osc.semitoneOffset,
         fineDetune: osc.fineDetune,
@@ -34,7 +32,7 @@ const SynthSaveLoad = {
       }
     });
     synthesizer.filters.forEach((filt, index) => {
-      synthData.synthesizer.filters[index] = {
+      synthData.filters[index] = {
         id: filt.id,
         type: filt.type,
         frequency: filt.frequency.value,
@@ -87,14 +85,14 @@ const SynthSaveLoad = {
       );
     }
   },
-  saveToPresets(name) {
+  saveToPresets() {
     if (DawManager.synthesizer) {
       fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset?overwrite=${DawManager.overwrite}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(Preset.save(DawManager.synthesizer, name))
+        body: JSON.stringify(SynthSaveLoad.save(DawManager.synthesizer))
       })
         .then(response => response.json())
         .then(body => {
