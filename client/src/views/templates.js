@@ -1,14 +1,7 @@
 const Templates = {
   link(classList, text, href, blankTarget) {
     let link = document.createElement('a');
-    let classes = '';
-    classList.forEach((className, index) => {
-      classes += className
-      if (index !== classList.length - 1) {
-        classes += ' '
-      }
-    });
-    link.setAttribute('class', classes);
+    link.setAttribute('class', classList);
     link.setAttribute('href', href);
     blankTarget ? link.setAttribute('target', '_blank') : null;
     link.innerText = text;
@@ -24,11 +17,12 @@ const Templates = {
       <div class="${name}Display">${value}</div>`
     return slider;
   },
-  button(synthName, name, text) {
-    let button = document.createElement('div');
-    button.setAttribute('class', name);
+  button(synthName, classList, text) {
+    let button = document.createElement('button');
+    button.setAttribute('class', classList);
     button.setAttribute('data-name', synthName);
-    button.innerHTML = `<button type="button">${text}</button>`;
+    button.setAttribute('type', "button");
+    button.innerText = text;
     return button;
   }
 };

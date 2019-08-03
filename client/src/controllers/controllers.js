@@ -83,13 +83,14 @@ const DawFormController = {
 const SynthListController = {
   addVolumeListener(slider) {
     slider.addEventListener('change', (event) => {
-      DawManager.daw.synth[event.currentTarget.dataset.name].setGain(event.target.value);
+      DawManager.daw.synthesizers[event.currentTarget.dataset.name].setGain(event.target.value);
     });
     return slider;
   },
   addMuteListener(button) {
     button.addEventListener('mousedown', (event) => {
-      DawManager.daw.synth[event.currentTarget.dataset.name].toggleMute();
+      DawManager.daw.synthesizers[event.currentTarget.dataset.name].toggleMute();
+      SynthViews.toggleMute(event.target, DawManager.daw.synthesizers[event.currentTarget.dataset.name].mute);
     });
     return button;
   }
