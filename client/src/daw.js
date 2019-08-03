@@ -1,6 +1,7 @@
 import { SynthViews } from './views/views.js';
 import SynthSaveLoad from './lib/synthSaveLoad.js';
 import { SynthManager } from './synthesizer.js';
+import newSynth from './lib/newSynth.js';
 
 const DawManager = {
   daw: null,
@@ -27,27 +28,9 @@ const DAW = function() {
 };
 
 DAW.prototype.handleMIDI = function(message) {
-  if (message.data[0] === 144) {
-    console.log('note on!');
-    this.notesOn(message);
-  } else if (message.data[0] === 128) {
-    console.log('note off!');
-    this.notesOff(message);
-  }
-};
-
-DAW.prototype.notesOn = function(midiMessage) {
   for (let synth in this.synthesizers) {
     if (synth !== 'size') {
-      this.synthesizers[synth].playNote(midiMessage);
-    }
-  }
-};
-
-DAW.prototype.notesOff = function(midiMessage) {
-  for (let synth in this.synthesizers) {
-    if (synth != 'size') {
-      this.synthesizers[synth].endNote(midiMessage);
+      this.synthesizers[synth].handleMIDI(message);
     }
   }
 };
@@ -56,7 +39,8 @@ DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
     SynthSaveLoad.load(this, synthData);
   } else {
-    SynthManager.createSynthesizer(this, { name: this.synthesizers.size });
+    newSynth.name = this.synthesizers.size;
+    SynthSaveLoad.load(this, newSynth);
   }
   this.synthesizers[SynthManager.synthesizer.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);

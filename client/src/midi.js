@@ -16,13 +16,10 @@ let MIDIKeyboard = {
     midiAccess.inputs.forEach(port => {
       port.onmidimessage = (message) => {
         if (DawManager.daw) {
-          MIDIKeyboard.handleInput(message);
+          DawManager.daw.handleMIDI(message);
         }
       }
     });
-  },
-  handleInput(message) {
-    DawManager.daw.handleMIDI(message);
   }
 };
 

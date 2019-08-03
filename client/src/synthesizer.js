@@ -45,6 +45,7 @@ class Synthesizer {
     this.addOscillator = this.addOscillator.bind(this);
     this.addFilter = this.addFilter.bind(this);
     this.toggleMute = this.toggleMute.bind(this);
+    this.handleMIDI = this.handleMIDI.bind(this);
     this.playNote = this.playNote.bind(this);
     this.endNote = this.endNote.bind(this);
     this.findNextNote = this.findNextNote.bind(this);
@@ -105,6 +106,16 @@ class Synthesizer {
       this.setGain(0);
     }
     this.mute = !this.mute;
+  }
+
+  handleMIDI(message) {
+    if (message.data[0] === 144) {
+      console.log('note on!');
+      this.playNote(message);
+    } else if (message.data[0] === 128) {
+      console.log('note off!');
+      this.endNote(message);
+    }
   }
 
   playNote(midiMessage) {
