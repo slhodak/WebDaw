@@ -26,7 +26,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('visibilitychange', (e) => {
-  if (document.hidden) {
+  if (Document.hidden) {
     DawManager.lastVisible = Date.now();
   } else {
     SynthSaveLoad.updateActives();

@@ -193,9 +193,7 @@ class Synthesizer {
 
   setGain(value) {
     this.globals.volume = value;
-    console.log(this.output.gain.value);
     this.output.gain.setTargetAtTime(value, this.daw.context.currentTime, 0);
-    console.log(this.output.gain.value);
   }
 
   setAttack(value) {
