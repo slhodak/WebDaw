@@ -7,7 +7,7 @@ let MIDIKeyboard = {
         MIDIKeyboard.create(midiAccess);
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
       });
   },
   create(midiAccess) {
