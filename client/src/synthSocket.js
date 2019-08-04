@@ -13,5 +13,6 @@ socket.onmessage = (message) => {
   if (data.rename) {
     DawManager.renameSynth(data.rename[0], data.rename[1]);
     SynthView.updateDataName(data.rename[0], data.rename[1]);
+    SynthView.populateSynthPresetSelector();
   }
 };
