@@ -44,7 +44,6 @@ class Synthesizer {
     this.addOscillator = this.addOscillator.bind(this);
     this.addFilter = this.addFilter.bind(this);
     this.toggleMute = this.toggleMute.bind(this);
-    this.handleMIDI = this.handleMIDI.bind(this);
     this.playNote = this.playNote.bind(this);
     this.endNote = this.endNote.bind(this);
     this.findNextNote = this.findNextNote.bind(this);
@@ -105,14 +104,6 @@ class Synthesizer {
       this.output.gain.setTargetAtTime(0, this.daw.context.currentTime, 0);
     }
     this.globals.mute = !this.globals.mute;
-  }
-
-  handleMIDI(message) {
-    if (message.data[0] === 144) {
-      this.playNote(message);
-    } else if (message.data[0] === 128) {
-      this.endNote(message);
-    }
   }
 
   playNote(midiMessage) {

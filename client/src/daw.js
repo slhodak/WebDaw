@@ -16,7 +16,8 @@ const DawManager = {
     delete DawManager.daw.synthesizers[oldName];
   },
   darkMode: false,
-  lastVisible: Date.now()
+  lastVisible: Date.now(),
+  MIDIOn: true
 };
 
 const DAW = function() {
@@ -30,7 +31,11 @@ const DAW = function() {
 DAW.prototype.handleMIDI = function(message) {
   for (let synth in this.synthesizers) {
     if (synth !== 'size') {
-      this.synthesizers[synth].handleMIDI(message);
+      if (message.data[0] === 144) {
+        this.synthesizers[synth].playNote(message);
+      } else if (message.data[0] === 128) {
+        this.synthesizers[synth].endNote(message);
+      }
     }
   }
 };
