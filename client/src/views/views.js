@@ -2,9 +2,10 @@ import Templates from './templates.js';
 import { SynthListController } from '../controllers/controllers.js';
 import { Network } from '../../config/config.js';
 import SynthSaveLoad from '../lib/synthSaveLoad.js';
+import DawManager from '../daw.js';
 
 const DawView = {
-  toggleDarkMode() {
+  toggleDarkMode(button) {
     let newMode, oldMode;
       if (DawManager.darkMode === true) {
         oldMode = 'dark';
@@ -20,7 +21,7 @@ const DawView = {
       });
       document.body.setAttribute('class', `${newMode}Body`);
       document.getElementsByClassName('title')[0].setAttribute('class', `title module row ${newMode}Title`);
-      e.target.innerText = `${oldMode} mode`;
+      button.innerText = `${oldMode} mode`;
       DawManager.darkMode = !DawManager.darkMode;
   },
   toggleOverwrite() {

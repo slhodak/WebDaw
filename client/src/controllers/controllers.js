@@ -34,7 +34,6 @@ window.addEventListener('visibilitychange', (e) => {
   DawManager.MIDIOn = !DawManager.MIDIOn;
 });
 
-//  Save and Load Synth Buttons
 const SynthFormController = {
   initializeAddSynthModule() {
     SynthFormController.enableNewSynthButton();
@@ -61,7 +60,7 @@ const DawFormController = {
   },
   enableDarkModeButton() {
     document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
-      DawView.toggleDarkMode();
+      DawView.toggleDarkMode(e.target);
     });
   },
   enableSaveButton() {
