@@ -2,9 +2,10 @@ import Templates from './templates.js';
 import { SynthListController } from '../controllers/controllers.js';
 import { Network } from '../../config/config.js';
 import SynthSaveLoad from '../lib/synthSaveLoad.js';
+import DawManager from '../daw.js';
 
 const DawView = {
-  toggleDarkMode() {
+  toggleDarkMode(button) {
     let newMode, oldMode;
       if (DawManager.darkMode === true) {
         oldMode = 'dark';
@@ -20,7 +21,7 @@ const DawView = {
       });
       document.body.setAttribute('class', `${newMode}Body`);
       document.getElementsByClassName('title')[0].setAttribute('class', `title module row ${newMode}Title`);
-      e.target.innerText = `${oldMode} mode`;
+      button.innerText = `${oldMode} mode`;
       DawManager.darkMode = !DawManager.darkMode;
   },
   toggleOverwrite() {
@@ -33,13 +34,14 @@ const DawView = {
 };
 
 const SynthView = {
-  add(synthData) {
+  add(synthesizer) {
     const synthList = document.getElementsByClassName('synthList')[0];    
     let synthElem = document.createElement('div');
     synthElem.setAttribute('class', 'synthesizer');
-    synthElem.appendChild(Templates.link(synthData.name, 'synthLink', 'Open', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthData.name}`, true))
-    synthElem.appendChild(SynthListController.addVolumeListener(Templates.slider(synthData.name, 'volume', 'Volume', 0, 1, 0.75, 0.001)));
-    synthElem.appendChild(SynthListController.addMuteListener(Templates.button(synthData.name, 'muteSynth', 'Mute')));
+    synthElem.appendChild(Templates.link(synthesizer.name, 'synthLink', 'Open', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthesizer.name}`, true))
+    synthElem.appendChild(Templates.title(synthesizer.name, 'synthName'));
+    synthElem.appendChild(SynthListController.addVolumeListener(Templates.slider(synthesizer.name, 'volume', 'Volume', 0, 1, 0.75, 0.001)));
+    synthElem.appendChild(SynthListController.addMuteListener(Templates.button(synthesizer.name, 'muteSynth', 'Mute')));
     synthList.appendChild(synthElem);
   },
   populateSynthPresetSelector() {
@@ -66,11 +68,19 @@ const SynthView = {
     let volumeDisplay = document.getElementsByClassName('volumeDisplay')[0];
     volumeDisplay.innerText = value;
   },
-  updateDataName(oldName, newName) {
+  updateSynthName(oldName, newName) {
     let synthElems = document.getElementsByClassName('synthesizer');
     for (let i = 0; i < synthElems.length; i++) {
-      if (synthElems[i].children[1].dataset.name === oldName) {
-        Array.from(synthElems[i].children).forEach(child => child.setAttribute('data-name', newName));
+      if (synthElems[i].children[0].dataset.name === oldName) {
+        Array.from(synthElems[i].children).forEach(child => {
+          if (child.nodeName === 'P') {
+            child.innerText = newName;
+          }
+          if (child.nodeName === 'A') {
+            child.setAttribute('href', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${newName}`);
+          }
+          child.setAttribute('data-name', newName);
+        });
         return;
       }
     }

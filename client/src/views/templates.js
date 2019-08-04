@@ -25,6 +25,13 @@ const Templates = {
     button.setAttribute('type', "button");
     button.innerText = text;
     return button;
+  },
+  title(synthName, classList) {
+    let title = document.createElement('p');
+    title.setAttribute('class', classList);
+    title.setAttribute('data-name', synthName);
+    title.innerText = synthName;
+    return title;
   }
 };
 
