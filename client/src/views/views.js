@@ -71,8 +71,11 @@ const SynthView = {
   updateSynthName(oldName, newName) {
     let synthElems = document.getElementsByClassName('synthesizer');
     for (let i = 0; i < synthElems.length; i++) {
-      if (synthElems[i].children[1].dataset.name === oldName) {
+      if (synthElems[i].children[0].dataset.name === oldName) {
         Array.from(synthElems[i].children).forEach(child => {
+          if (child.nodeName === 'P') {
+            child.innerText = newName;
+          }
           if (child.nodeName === 'A') {
             child.setAttribute('href', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${newName}`);
           }

@@ -29,6 +29,7 @@ const Templates = {
   title(synthName, classList) {
     let title = document.createElement('p');
     title.setAttribute('class', classList);
+    title.setAttribute('data-name', synthName);
     title.innerText = synthName;
     return title;
   }
