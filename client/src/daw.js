@@ -31,7 +31,7 @@ const DAW = function() {
 DAW.prototype.handleMIDI = function(message) {
   for (let synth in this.synthesizers) {
     if (synth !== 'size') {
-      if (message.data[0] === 144) {
+      if (message.data[0] === 144 && DawManager.MIDIOn) {
         this.synthesizers[synth].playNote(message);
       } else if (message.data[0] === 128) {
         this.synthesizers[synth].endNote(message);

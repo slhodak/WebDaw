@@ -15,7 +15,7 @@ let MIDIKeyboard = {
     console.log('connected to midi');
     midiAccess.inputs.forEach(port => {
       port.onmidimessage = (message) => {
-        if (DawManager.daw && DawManager.MIDIOn) {
+        if (DawManager.daw) {
           DawManager.daw.handleMIDI(message);
         }
       }
