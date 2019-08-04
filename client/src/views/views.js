@@ -3,7 +3,7 @@ import { SynthListController } from '../controllers/controllers.js';
 import { Network } from '../../config/config.js';
 import SynthSaveLoad from '../lib/synthSaveLoad.js';
 
-const DawViews = {
+const DawView = {
   toggleDarkMode() {
     let newMode, oldMode;
       if (DawManager.darkMode === true) {
@@ -32,7 +32,7 @@ const DawViews = {
   }
 };
 
-const SynthViews = {
+const SynthView = {
   add(synthData) {
     const synthList = document.getElementsByClassName('synthList')[0];    
     let synthElem = document.createElement('div');
@@ -62,10 +62,14 @@ const SynthViews = {
   },
   toggleMute(button, muted) {
     button.setAttribute('class', muted ? 'muteSynth muted' : 'muteSynth' );
+  },
+  updateVolume(value) {
+    let volumeDisplay = document.getElementsByClassName('volumeDisplay')[0];
+    volumeDisplay.innerText = value;
   }
 };
 
 export {
-  DawViews,
-  SynthViews
+  DawView,
+  SynthView
 }

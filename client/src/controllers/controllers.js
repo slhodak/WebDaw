@@ -1,10 +1,8 @@
-import { Network } from '../../config/config.js';
 import DawManager from '../daw.js';
 import SynthSaveLoad from '../lib/synthSaveLoad.js';
-import { SynthViews, DawViews } from '../views/views.js';
+import { SynthView, DawView } from '../views/views.js';
 
 //  General Controls
-
 const Controls = {
   83: () => {
     DawManager.daw.addSynthesizer();
@@ -39,7 +37,7 @@ window.addEventListener('visibilitychange', (e) => {
 const SynthFormController = {
   initializeAddSynthModule() {
     SynthFormController.enableNewSynthButton();
-    SynthViews.populateSynthPresetSelector();
+    SynthView.populateSynthPresetSelector();
     SynthFormController.enableLoadSynthButton();
   },
   enableLoadSynthButton() {
@@ -62,7 +60,7 @@ const DawFormController = {
   },
   enableDarkModeButton() {
     document.getElementsByClassName('darkMode')[0].addEventListener('mousedown', (e) => {
-      DawViews.toggleDarkMode();
+      DawView.toggleDarkMode();
     });
   },
   enableSaveButton() {
@@ -74,7 +72,7 @@ const DawFormController = {
   enableOverwriteButton() {
     let overwrite = document.getElementsByClassName('overwrite')[0];
     overwrite.addEventListener('mousedown', (e) => {
-      DawViews.toggleOverwrite();
+      DawView.toggleOverwrite();
       DawManager.overwrite = !DawManager.overwrite;
     });
   },
@@ -82,20 +80,21 @@ const DawFormController = {
 
 const SynthListController = {
   addVolumeListener(slider) {
-    slider.addEventListener('change', (event) => {
-      DawManager.daw.synthesizers[event.currentTarget.dataset.name].setVolume(event.target.value);
+    slider.addEventListener('input', (event) => {
+      DawManager.daw.synthesizers[event.currentTarget.dataset.name].setGain(event.target.value);
+      SynthView.updateVolume(event.target.value);
     });
     return slider;
   },
   addMuteListener(button) {
     button.addEventListener('mousedown', (event) => {
       DawManager.daw.synthesizers[event.currentTarget.dataset.name].toggleMute();
-      SynthViews.toggleMute(event.target, DawManager.daw.synthesizers[event.currentTarget.dataset.name].globals.mute);
+      SynthView.toggleMute(event.target, DawManager.daw.synthesizers[event.currentTarget.dataset.name].globals.mute);
     });
     return button;
   }
 };
 
-export { 
+export {
   SynthListController
 }

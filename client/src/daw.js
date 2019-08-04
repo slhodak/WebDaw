@@ -1,4 +1,4 @@
-import { SynthViews } from './views/views.js';
+import { SynthView } from './views/views.js';
 import SynthSaveLoad from './lib/synthSaveLoad.js';
 import { SynthManager } from './synthesizer.js';
 import newSynth from './lib/newSynth.js';
@@ -45,7 +45,7 @@ DAW.prototype.addSynthesizer = function(synthData) {
   this.synthesizers[SynthManager.synthesizer.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  SynthViews.add(SynthManager.synthesizer);
+  SynthView.add(SynthManager.synthesizer);
   SynthSaveLoad.saveToActives(SynthManager.synthesizer);
   SynthManager.synthesizer = null;
 };

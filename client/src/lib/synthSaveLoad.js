@@ -1,7 +1,7 @@
 import DawManager from '../daw.js';
 import { Network } from '../../config/config.js';
 import { SynthManager } from '../synthesizer.js';
-import { SynthViews } from '../views/views.js';
+import { SynthView } from '../views/views.js';
 
 const SynthSaveLoad = {
   save(synthesizer) {
@@ -100,7 +100,7 @@ const SynthSaveLoad = {
           if (body.error === 'exists') {
             window.alert('A preset already exists with that name.\nPlease choose another name or select the "overwrite" option.');
           } else {
-            SynthViews.populateSynthPresetSelector();
+            SynthView.populateSynthPresetSelector();
             document.getElementsByClassName('save')[0].setAttribute('class', 'module save confirmation');
             setTimeout(() => {
               document.getElementsByClassName('save')[0].setAttribute('class', 'module save');
