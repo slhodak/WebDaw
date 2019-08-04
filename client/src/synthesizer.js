@@ -58,10 +58,10 @@ class Synthesizer {
 
   update(synthesizer) {
     this.name = synthesizer.name;
-    this.porta = synthesizer.settings.globals.porta;
-    this.attack = synthesizer.settings.globals.attack;
-    this.release = synthesizer.settings.globals.release;
-    this.poly = synthesizer.settings.poly;
+    this.porta = synthesizer.globals.porta;
+    this.attack = synthesizer.globals.attack;
+    this.release = synthesizer.globals.release;
+    this.globals.poly = synthesizer.globals.poly;
 
     this.oscillators = [];
     synthesizer.oscillators.forEach(osc => {
@@ -99,12 +99,12 @@ class Synthesizer {
   }
 
   toggleMute() {
-    if (this.mute) {
+    if (this.globals.mute) {
       this.setGain(this.globals.volume);
     } else {
-      this.setGain(0);
+      this.output.gain.setTargetAtTime(0, this.daw.context.currentTime, 0);
     }
-    this.mute = !this.mute;
+    this.globals.mute = !this.globals.mute;
   }
 
   handleMIDI(message) {
@@ -116,8 +116,8 @@ class Synthesizer {
   }
 
   playNote(midiMessage) {
-    if (!this.mute) {
-      if (this.poly) {
+    if (!this.globals.mute) {
+      if (this.globals.poly) {
         this.oscillators.forEach(osc => {
           osc.addVoice(midiMessage);
         });
@@ -165,8 +165,8 @@ class Synthesizer {
   }
 
   endNote(midiMessage) {
-    if (!this.mute) {
-      if (this.poly) {
+    if (!this.globals.mute) {
+      if (this.globals.poly) {
         this.oscillators.forEach(osc => {
           osc.removeVoice(midiMessage);
         });
@@ -201,12 +201,14 @@ class Synthesizer {
   }
 
   togglePoly() {
-    this.poly = !this.poly;
+    this.globals.poly = !this.globals.poly;
   }
 
   setGain(value) {
-    this.volume = value;
+    this.globals.volume = value;
+    console.log(this.output.gain.value);
     this.output.gain.setTargetAtTime(value, this.daw.context.currentTime, 0);
+    console.log(this.output.gain.value);
   }
 
   setAttack(value) {
@@ -310,7 +312,7 @@ class Oscillator {
 
     this.setDestination = this.setDestination.bind(this);
 
-    this.setVolume = this.setVolume.bind(this);
+    this.setGain = this.setGain.bind(this);
     this.setPorta = this.setPorta.bind(this);
     this.setType = this.setType.bind(this);
     this.setSemitoneOffset = this.setSemitoneOffset.bind(this);
@@ -351,7 +353,7 @@ class Oscillator {
     this.dest = destination;
   }
 
-  setVolume(volume) {
+  setGain(volume) {
     this.volume = volume;
     for (let voice in this.voices) {
       Helpers.LL.changeAllNodes(this.voices[voice], (node) => {
