@@ -107,35 +107,44 @@ class Synthesizer {
   }
 
   playNote(midiMessage) {
-    if (!this.globals.mute) {
-      if (this.globals.poly) {
+    if (this.globals.poly) {
+      this.oscillators.forEach(osc => {
+        osc.addVoice(midiMessage);
+      });
+    } else {
+      if (!this.mono.note) {
         this.oscillators.forEach(osc => {
-          osc.addVoice(midiMessage);
-        });
+          this.mono.voices[midiMessage.data[1]] = new Voice(
+            this.daw.context, 
+            {
+              frequency: this.findFrequencyFromNote(midiMessage.data[1]),
+              type: osc.type,
+              detune: osc.fineDetune
+            }, 
+            osc);
+          });
+        this.mono.notesObj[midiMessage.data[1]] = true;
+        this.mono.notesList.push(midiMessage.data[1]);
+        this.mono.note = midiMessage.data[1];
       } else {
-        if (!this.mono.note) {
-          this.oscillators.forEach(osc => {
-            this.mono.voices[midiMessage.data[1]] = new Voice(
-              this.daw.context, 
-              {
-                frequency: this.findFrequencyFromNote(midiMessage.data[1]),
-                type: osc.type,
-                detune: osc.fineDetune
-              }, 
-              osc);
-            });
+        for (let voice in this.mono.voices) {
+          this.mono.voices[voice].setFrequency(midiMessage.data[1]);
           this.mono.notesObj[midiMessage.data[1]] = true;
           this.mono.notesList.push(midiMessage.data[1]);
           this.mono.note = midiMessage.data[1];
-        } else {
-          for (let voice in this.mono.voices) {
-            this.mono.voices[voice].setFrequency(midiMessage.data[1]);
-            this.mono.notesObj[midiMessage.data[1]] = true;
-            this.mono.notesList.push(midiMessage.data[1]);
-            this.mono.note = midiMessage.data[1];
-          }
         }
       }
+    }
+  }
+
+  endNote(midiMessage) {
+    if (this.globals.poly) {
+      this.oscillators.forEach(osc => {
+        osc.removeVoice(midiMessage);
+      });
+    } else {
+      delete this.mono.notesObj[midiMessage.data[1]];
+      this.findNextNote();
     }
   }
 
@@ -153,19 +162,6 @@ class Synthesizer {
   addFilter(options = {}) {
     this.filters.push(new Filter(this, options));
     this.router.updateRouter();
-  }
-
-  endNote(midiMessage) {
-    if (!this.globals.mute) {
-      if (this.globals.poly) {
-        this.oscillators.forEach(osc => {
-          osc.removeVoice(midiMessage);
-        });
-      } else {
-        delete this.mono.notesObj[midiMessage.data[1]];
-        this.findNextNote();
-      }
-    }
   }
 
   findNextNote() {
