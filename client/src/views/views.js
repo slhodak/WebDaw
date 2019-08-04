@@ -37,7 +37,7 @@ const SynthView = {
     const synthList = document.getElementsByClassName('synthList')[0];    
     let synthElem = document.createElement('div');
     synthElem.setAttribute('class', 'synthesizer');
-    synthElem.appendChild(Templates.link('synthLink', 'Open', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthData.name}`, true))
+    synthElem.appendChild(Templates.link(synthData.name, 'synthLink', 'Open', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthData.name}`, true))
     synthElem.appendChild(SynthListController.addVolumeListener(Templates.slider(synthData.name, 'volume', 'Volume', 0, 1, 0.75, 0.001)));
     synthElem.appendChild(SynthListController.addMuteListener(Templates.button(synthData.name, 'muteSynth', 'Mute')));
     synthList.appendChild(synthElem);
@@ -46,7 +46,6 @@ const SynthView = {
     let presetSelector = document.getElementsByClassName('synthPresetSelector')[0];
     SynthSaveLoad.getSynthPresetNames((err, data) => {
       if (err) {
-        console.error(err);
       } else {
         presetSelector.innerHTML = '';
         let option = document.createElement('option');
@@ -66,6 +65,15 @@ const SynthView = {
   updateVolume(value) {
     let volumeDisplay = document.getElementsByClassName('volumeDisplay')[0];
     volumeDisplay.innerText = value;
+  },
+  updateDataName(oldName, newName) {
+    let synthElems = document.getElementsByClassName('synthesizer');
+    for (let i = 0; i < synthElems.length; i++) {
+      if (synthElems[i].children[1].dataset.name === oldName) {
+        Array.from(synthElems[i].children).forEach(child => child.setAttribute('data-name', newName));
+        return;
+      }
+    }
   }
 };
 

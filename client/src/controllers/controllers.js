@@ -26,11 +26,12 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('visibilitychange', (e) => {
-  if (document.hidden) {
+  if (document.visibilityState === 'hidden') {
     DawManager.lastVisible = Date.now();
   } else {
     SynthSaveLoad.updateActives();
   }
+  DawManager.MIDIOn = !DawManager.MIDIOn;
 });
 
 //  Save and Load Synth Buttons

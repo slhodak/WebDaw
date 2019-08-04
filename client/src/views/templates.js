@@ -1,6 +1,7 @@
 const Templates = {
-  link(classList, text, href, blankTarget) {
+  link(synthName, classList, text, href, blankTarget) {
     let link = document.createElement('a');
+    link.dataset.name = synthName;
     link.setAttribute('class', classList);
     link.setAttribute('href', href);
     blankTarget ? link.setAttribute('target', '_blank') : null;

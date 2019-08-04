@@ -136,7 +136,7 @@ const SynthSaveLoad = {
             }
           });
         } else {
-          console.log(data.message);
+          console.error(`Message received instead of active synth updates: ${ata.message}`);
         }
       })
       .catch(err => console.error(`Error fetching actives: ${err}`));
