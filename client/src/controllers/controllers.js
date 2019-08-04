@@ -31,6 +31,7 @@ window.addEventListener('visibilitychange', (e) => {
   } else {
     SynthSaveLoad.updateActives();
   }
+  DawManager.MIDIOn = !DawManager.MIDIOn;
 });
 
 //  Save and Load Synth Buttons

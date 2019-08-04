@@ -264,7 +264,6 @@ class Voice extends OscillatorNode {
     this.gainNode.connect(parent.output);
     this.start();
     this.gainNode.gain.setTargetAtTime(parent.volume, this.parent.synthesizer.daw.context.currentTime, parent.attack);
-    console.log('starting voice: ', this);
     this.setFrequency = this.setFrequency.bind(this);
     this.off = this.off.bind(this);
   }
