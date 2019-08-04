@@ -39,6 +39,7 @@ const SynthView = {
     let synthElem = document.createElement('div');
     synthElem.setAttribute('class', 'synthesizer');
     synthElem.appendChild(Templates.link(synthesizer.name, 'synthLink', 'Open', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthesizer.name}`, true))
+    synthElem.appendChild(Templates.title(synthesizer.name, 'synthName'));
     synthElem.appendChild(SynthListController.addVolumeListener(Templates.slider(synthesizer.name, 'volume', 'Volume', 0, 1, 0.75, 0.001)));
     synthElem.appendChild(SynthListController.addMuteListener(Templates.button(synthesizer.name, 'muteSynth', 'Mute')));
     synthList.appendChild(synthElem);
@@ -67,7 +68,7 @@ const SynthView = {
     let volumeDisplay = document.getElementsByClassName('volumeDisplay')[0];
     volumeDisplay.innerText = value;
   },
-  updateDataName(oldName, newName) {
+  updateSynthName(oldName, newName) {
     let synthElems = document.getElementsByClassName('synthesizer');
     for (let i = 0; i < synthElems.length; i++) {
       if (synthElems[i].children[1].dataset.name === oldName) {
