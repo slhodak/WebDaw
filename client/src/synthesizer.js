@@ -25,12 +25,13 @@ class Synthesizer {
     this.output = daw.context.createGain();
     this.output.connect(daw.masterGain);
     this.globals = {
-      demoTone: false,
-      porta: options.porta || 0.05,
-      attack: options.attack || 0.01,
-      release: options.release || 0.1,
-      type: options.type || 'sine',
-      volume: 1
+      poly: options.poly,
+      porta: options.porta,
+      attack: options.attack,
+      release: options.release,
+      type: options.type,
+      mute: options.mute,
+      volume: options.volume
     };
     this.mono = {
       note: null,
@@ -38,8 +39,6 @@ class Synthesizer {
       notesObj: {},
       voices: {}
     };
-    this.poly = options.poly || true;
-    this.mute = false;
     this.oscillators = [];
     this.filters = [];
     this.addOscillator = this.addOscillator.bind(this);
@@ -101,7 +100,7 @@ class Synthesizer {
 
   toggleMute() {
     if (this.mute) {
-      this.setGain(this.volume);
+      this.setGain(this.globals.volume);
     } else {
       this.setGain(0);
     }
@@ -110,10 +109,8 @@ class Synthesizer {
 
   handleMIDI(message) {
     if (message.data[0] === 144) {
-      console.log('note on!');
       this.playNote(message);
     } else if (message.data[0] === 128) {
-      console.log('note off!');
       this.endNote(message);
     }
   }
@@ -130,7 +127,7 @@ class Synthesizer {
             this.mono.voices[midiMessage.data[1]] = new Voice(
               this.daw.context, 
               {
-                frequency: synthesizer.findFrequencyFromNote(midiMessage.data[1]),
+                frequency: this.findFrequencyFromNote(midiMessage.data[1]),
                 type: osc.type,
                 detune: osc.fineDetune
               }, 

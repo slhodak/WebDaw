@@ -8,20 +8,18 @@ const SynthSaveLoad = {
     let synthData = {
       name: synthesizer.name,
       router: {},
-      settings: {
-        globals: {}
-      },
+      globals: {},
       oscillators: [],
       filters: []
     };
     for (let route in synthesizer.router.table) {
       synthData.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
     }
-    synthData.settings.globals.volume = synthesizer.output.gain.value;
-    synthData.settings.poly = synthesizer.poly;
-    synthData.settings.globals.porta = synthesizer.globals.porta;
-    synthData.settings.globals.attack = synthesizer.globals.attack;
-    synthData.settings.globals.release = synthesizer.globals.release;
+    synthData.globals.volume = synthesizer.output.gain.value;
+    synthData.globals.poly = synthesizer.globals.poly;
+    synthData.globals.porta = synthesizer.globals.porta;
+    synthData.globals.attack = synthesizer.globals.attack;
+    synthData.globals.release = synthesizer.globals.release;
     synthesizer.oscillators.forEach((osc, index) => {
       synthData.oscillators[index] = {
         id: osc.id,
@@ -45,10 +43,13 @@ const SynthSaveLoad = {
   load(daw, synthesizer) {
     SynthManager.createSynthesizer(daw, {
       name: synthesizer.name,
-      porta: synthesizer.settings.globals.porta,
-      attack: synthesizer.settings.globals.attack,
-      release: synthesizer.settings.globals.release,
-      poly: synthesizer.settings.poly
+      poly: synthesizer.poly,
+      porta: synthesizer.globals.porta,
+      attack: synthesizer.globals.attack,
+      release: synthesizer.globals.release,
+      type: synthesizer.globals.type,
+      mute: synthesizer.globals.mute,
+      volume: synthesizer.globals.volume
     });
 
     SynthManager.synthesizer.oscillators = [];

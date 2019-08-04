@@ -3,13 +3,14 @@ export default {
   "router": {
     "1000": "main out",
   },
-  "settings": {
+  "globals": {
     "poly": true,
-    "globals": {
-      "porta": 0.05,
-      "attack": 0.01,
-      "release": 0.1
-    }
+    "porta": 0.05,
+    "attack": 0.01,
+    "release": 0.1,
+    "type": "sine",
+    "mute": false,
+    "volume": 0.75
   },
   "oscillators": [
     {
