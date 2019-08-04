@@ -27,9 +27,7 @@ const Helpers = {
   },
   LL: {
     removeHead(list) {
-      console.log('tail ', list.tail);
       list.head = list.head.next;
-      console.log('head ', list.head);
       return list.head;
     },
     addToTail(list, node) {
