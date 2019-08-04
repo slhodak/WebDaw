@@ -1,31 +1,27 @@
 import DawManager from '../daw.js';
 import { Network } from '../../config/config.js';
 import { SynthManager } from '../synthesizer.js';
-import { SynthViews } from '../views/views.js';
+import { SynthView } from '../views/views.js';
 
 const SynthSaveLoad = {
   save(synthesizer) {
     let synthData = {
-      synthesizer: {
-        name: synthesizer.name,
-        router: {},
-        settings: {
-          globals: {}
-        },
-        oscillators: [],
-        filters: []
-      }
+      name: synthesizer.name,
+      router: {},
+      globals: {},
+      oscillators: [],
+      filters: []
     };
     for (let route in synthesizer.router.table) {
-      synthData.synthesizer.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
+      synthData.router[route] = synthesizer.router.table[route].node.dest.id || 'main out';
     }
-    synthData.synthesizer.settings.globals.volume = synthesizer.output.gain.value;
-    synthData.synthesizer.settings.poly = synthesizer.poly;
-    synthData.synthesizer.settings.globals.porta = synthesizer.globals.porta;
-    synthData.synthesizer.settings.globals.attack = synthesizer.globals.attack;
-    synthData.synthesizer.settings.globals.release = synthesizer.globals.release;
+    synthData.globals.volume = synthesizer.output.gain.value;
+    synthData.globals.poly = synthesizer.globals.poly;
+    synthData.globals.porta = synthesizer.globals.porta;
+    synthData.globals.attack = synthesizer.globals.attack;
+    synthData.globals.release = synthesizer.globals.release;
     synthesizer.oscillators.forEach((osc, index) => {
-      synthData.synthesizer.oscillators[index] = {
+      synthData.oscillators[index] = {
         id: osc.id,
         semitoneOffset: osc.semitoneOffset,
         fineDetune: osc.fineDetune,
@@ -34,7 +30,7 @@ const SynthSaveLoad = {
       }
     });
     synthesizer.filters.forEach((filt, index) => {
-      synthData.synthesizer.filters[index] = {
+      synthData.filters[index] = {
         id: filt.id,
         type: filt.type,
         frequency: filt.frequency.value,
@@ -47,10 +43,13 @@ const SynthSaveLoad = {
   load(daw, synthesizer) {
     SynthManager.createSynthesizer(daw, {
       name: synthesizer.name,
-      porta: synthesizer.settings.globals.porta,
-      attack: synthesizer.settings.globals.attack,
-      release: synthesizer.settings.globals.release,
-      poly: synthesizer.settings.poly
+      poly: synthesizer.poly,
+      porta: synthesizer.globals.porta,
+      attack: synthesizer.globals.attack,
+      release: synthesizer.globals.release,
+      type: synthesizer.globals.type,
+      mute: synthesizer.globals.mute,
+      volume: synthesizer.globals.volume
     });
 
     SynthManager.synthesizer.oscillators = [];
@@ -87,21 +86,21 @@ const SynthSaveLoad = {
       );
     }
   },
-  saveToPresets(name) {
+  saveToPresets() {
     if (DawManager.synthesizer) {
       fetch(`${Network.synthServiceHost}:${Network.synthServicePort}/preset?overwrite=${DawManager.overwrite}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(Preset.save(DawManager.synthesizer, name))
+        body: JSON.stringify(SynthSaveLoad.save(DawManager.synthesizer))
       })
         .then(response => response.json())
         .then(body => {
           if (body.error === 'exists') {
             window.alert('A preset already exists with that name.\nPlease choose another name or select the "overwrite" option.');
           } else {
-            SynthViews.populateSynthPresetSelector();
+            SynthView.populateSynthPresetSelector();
             document.getElementsByClassName('save')[0].setAttribute('class', 'module save confirmation');
             setTimeout(() => {
               document.getElementsByClassName('save')[0].setAttribute('class', 'module save');

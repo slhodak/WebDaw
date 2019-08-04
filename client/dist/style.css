@@ -194,31 +194,37 @@ ul {
   background-color: rgb(176, 235, 159);
 }
 
-
-/* NEW */
-
 .synthesizer {
   display: flex;
   border: 1px solid black;
   border-radius: 5px;
   align-items: center;
+  justify-content: space-between;
 }
 
 .synthLink {
-  border: 3px solid white;
+  width: 80px;
   border-radius: 8px;
-  background-color: green;
-  color: white;
+  background-color: rgb(140, 228, 140);
   font-weight: 700;
-  padding: 0px 4px 0px 4px;
+  color: black;
   margin: 5px;
+  text-align: center;
   text-decoration: none;
 }
 
-/* .synthLink a {
-  
-} */
-
 .synthLink:hover {
-  color: rgb(185, 185, 255);
+  background-color: rgb(30, 219, 71);
+}
+
+.muteSynth {
+  width: 80px;
+  border-radius: 8px;
+  background-color: rgb(175, 219, 255);
+  font-size: 1rem;
+  margin: 5px;
+}
+
+.muted {
+  background-color: rgb(195, 175, 158);
 }

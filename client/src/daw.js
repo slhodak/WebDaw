@@ -1,6 +1,7 @@
-import { SynthViews } from './views/views.js';
+import { SynthView } from './views/views.js';
 import SynthSaveLoad from './lib/synthSaveLoad.js';
 import { SynthManager } from './synthesizer.js';
+import newSynth from './lib/newSynth.js';
 
 const DawManager = {
   daw: null,
@@ -21,20 +22,30 @@ const DawManager = {
 const DAW = function() {
   this.context = new AudioContext();
   this.masterGain = this.context.createGain();
+  this.masterGain.connect(this.context.destination);
   this.synthesizers = { size: 0 };
   this.pianoRoll = null;
+};
+
+DAW.prototype.handleMIDI = function(message) {
+  for (let synth in this.synthesizers) {
+    if (synth !== 'size') {
+      this.synthesizers[synth].handleMIDI(message);
+    }
+  }
 };
 
 DAW.prototype.addSynthesizer = function(synthData) {
   if (synthData) {
     SynthSaveLoad.load(this, synthData);
   } else {
-    SynthManager.createSynthesizer(this, { name: this.synthesizers.size });
+    newSynth.name = this.synthesizers.size;
+    SynthSaveLoad.load(this, newSynth);
   }
   this.synthesizers[SynthManager.synthesizer.name] = SynthManager.synthesizer;
   SynthManager.synthesizer.output.connect(this.masterGain);
   this.synthesizers.size += 1;
-  SynthViews.add(SynthManager.synthesizer);
+  SynthView.add(SynthManager.synthesizer);
   SynthSaveLoad.saveToActives(SynthManager.synthesizer);
   SynthManager.synthesizer = null;
 };

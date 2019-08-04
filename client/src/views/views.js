@@ -3,7 +3,7 @@ import { SynthListController } from '../controllers/controllers.js';
 import { Network } from '../../config/config.js';
 import SynthSaveLoad from '../lib/synthSaveLoad.js';
 
-const DawViews = {
+const DawView = {
   toggleDarkMode() {
     let newMode, oldMode;
       if (DawManager.darkMode === true) {
@@ -32,12 +32,12 @@ const DawViews = {
   }
 };
 
-const SynthViews = {
+const SynthView = {
   add(synthData) {
     const synthList = document.getElementsByClassName('synthList')[0];    
     let synthElem = document.createElement('div');
     synthElem.setAttribute('class', 'synthesizer');
-    synthElem.appendChild(Templates.link(['synthLink'], 'OPEN', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthData.name}`, true))
+    synthElem.appendChild(Templates.link('synthLink', 'Open', `${Network.synthServiceHost}:${Network.synthServicePort}/?name=${synthData.name}`, true))
     synthElem.appendChild(SynthListController.addVolumeListener(Templates.slider(synthData.name, 'volume', 'Volume', 0, 1, 0.75, 0.001)));
     synthElem.appendChild(SynthListController.addMuteListener(Templates.button(synthData.name, 'muteSynth', 'Mute')));
     synthList.appendChild(synthElem);
@@ -59,10 +59,17 @@ const SynthViews = {
         });
       }
     });
+  },
+  toggleMute(button, muted) {
+    button.setAttribute('class', muted ? 'muteSynth muted' : 'muteSynth' );
+  },
+  updateVolume(value) {
+    let volumeDisplay = document.getElementsByClassName('volumeDisplay')[0];
+    volumeDisplay.innerText = value;
   }
 };
 
 export {
-  DawViews,
-  SynthViews
+  DawView,
+  SynthView
 }
