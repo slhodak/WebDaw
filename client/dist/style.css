@@ -216,9 +216,10 @@ select {
 
 .synthName {
   margin: 0px;
-  padding: 0px 5px;
-  border-left: 1px solid rgb(172, 172, 172);
-  border-right: 1px solid rgb(172, 172, 172);
+  padding: 0px 6px;
+  border-left: 1px solid rgb(130, 130, 130);
+  border-right: 1px solid rgb(130, 130, 130);
+  border-radius: 8px;
 }
 
 .synthLink {
