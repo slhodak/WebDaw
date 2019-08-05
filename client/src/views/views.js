@@ -64,9 +64,8 @@ const SynthView = {
   toggleMute(button, muted) {
     button.setAttribute('class', muted ? 'muteSynth muted' : 'muteSynth' );
   },
-  updateVolume(value) {
-    let volumeDisplay = document.getElementsByClassName('volumeDisplay')[0];
-    volumeDisplay.innerText = value;
+  updateVolume(slider, value) {
+    slider.children[2].innerText = Number(value).toFixed(2);
   },
   updateSynthName(oldName, newName) {
     let synthElems = document.getElementsByClassName('synthesizer');
