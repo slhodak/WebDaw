@@ -81,8 +81,6 @@ const DawFormController = {
 const SynthListController = {
   addVolumeListener(slider) {
     slider.addEventListener('input', (event) => {
-      console.log(event.currentTarget.dataset.name);
-      console.log(DawManager.daw);
       DawManager.daw.synthesizers[event.currentTarget.dataset.name].setGain(event.target.value);
       SynthView.updateVolume(slider, event.target.value);
     });
