@@ -2,7 +2,7 @@ import { Network } from '../config/config.js';
 import DawManager from './daw.js';
 import { SynthView } from './views/views.js';
 
-const socket = new WebSocket(`${Network.synthWSHost}:${Network.synthWSPort}`, 'synth');
+const socket = new WebSocket(`${Network.synthWSHost}:${Network.synthWSPort}`, 'daw');
 
 socket.onopen = (open) => {
   console.log("Opened connection to WebSynth");
