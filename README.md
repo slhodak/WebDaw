@@ -1,7 +1,7 @@
 # WebDAW
 
 ## Overview
-A cloud-native digital audio workstation. Create and access multiple synthesizers from one location. This was developed to solve the problem of connecting multiple synthesizers to a single note sequencer. Implementing full functionality is still in progress--see work in feature branches on [WebRoll](https://github.com/slhodak/WebRoll).  
+A cloud-native digital audio workstation. Create and access multiple synthesizers from one location. This was developed to solve the problem of connecting multiple instances of [WebSynth](https://github.com/slhodak/WebSynth)to a single note sequencer. Implementing full functionality is still in progress--see work in feature branches on [WebRoll](https://github.com/slhodak/WebRoll).  
 
 ## Installation
 First ensure that an instance of the [WebSynth](https://github.com/slhodak/WebSynth) server is running locally. Then,   
